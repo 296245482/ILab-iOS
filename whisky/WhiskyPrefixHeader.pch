@@ -1,0 +1,44 @@
+//
+//  WhiskyPrefixHeader.pch
+//  whisky
+//
+//  Created by QiuFeng on 4/22/16.
+//  Copyright © 2016 www.qiufeng.me. All rights reserved.
+//
+
+#ifndef WhiskyPrefixHeader_pch
+#define WhiskyPrefixHeader_pch
+
+#import "SVProgressHUD.h"
+#import "CocoaLumberjack.h"
+#import "UIColor+AppColor.h"
+#import "WHIGlobal.h"
+#import "NSDate+Calendar.h"
+#import "WHIActivityIndicatorButton.h"
+#import "SVProgressHUD.h"
+#import "Masonry.h"
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+#ifdef DEBUG
+static const DDLogLevel ddLogLevel = DDLogLevelAll;
+
+#else
+static const DDLogLevel ddLogLevel = DDLogLevelError;
+#endif
+
+#define kTodayDataRefreshTimer 1800        //今日 pm 半小时刷新一次
+#define kToDayInterval 1800            //今日 pm 30分钟一个点
+
+#define kHourInterval 300            //1分钟 近2小时 5分钟一个点
+#define kHourDataRefreshTimer 120      //2分钟 刷新一次
+
+#define kWeekInterval 86400
+
+
+#define queryTimerDutaion 30
+
+
+#endif /* WhiskyPrefixHeader_pch */

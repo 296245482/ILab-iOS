@@ -1,0 +1,131 @@
+PODS:
+  - AFNetworkActivityLogger (2.0.4):
+    - AFNetworking/NSURLConnection (~> 2.0)
+    - AFNetworking/NSURLSession (~> 2.0)
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - BaiduMapKit (3.0.0)
+  - BlocksKit (2.2.5):
+    - BlocksKit/All (= 2.2.5)
+  - BlocksKit/All (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.2.5)
+  - BlocksKit/DynamicDelegate (2.2.5)
+  - BlocksKit/MessageUI (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - Bugtags (1.2.7)
+  - Charts (2.2.5):
+    - Charts/Core (= 2.2.5)
+  - Charts/Core (2.2.5)
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - CocoaLumberjack (2.2.0):
+    - CocoaLumberjack/Default (= 2.2.0)
+    - CocoaLumberjack/Extensions (= 2.2.0)
+  - CocoaLumberjack/Core (2.2.0)
+  - CocoaLumberjack/Default (2.2.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.2.0):
+    - CocoaLumberjack/Default
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - KTCenterFlowLayout (1.1.1)
+  - KVOController (1.0.3)
+  - Mantle (2.0.6):
+    - Mantle/extobjc (= 2.0.6)
+  - Mantle/extobjc (2.0.6)
+  - Masonry (0.6.4)
+  - NSDate+Calendar (0.0.8)
+  - SDWebImage (3.7.5):
+    - SDWebImage/Core (= 3.7.5)
+  - SDWebImage/Core (3.7.5)
+  - SVProgressHUD (2.0.3)
+  - SVPullToRefresh (0.4.1)
+  - UIActivityIndicator-for-SDWebImage (1.2):
+    - SDWebImage (~> 3.7)
+  - UIActivityIndicator-for-SDWebImage+UIButton (1.2):
+    - SDWebImage (~> 3.7)
+  - UICKeyChainStore (2.1.0)
+  - UMengAnalytics (4.0.4)
+  - UMengSocialCOM (5.2.1)
+
+DEPENDENCIES:
+  - AFNetworkActivityLogger (~> 2.0.4)
+  - AFNetworking (~> 2.6.3)
+  - BaiduMapKit (~> 3.0.0)
+  - BlocksKit (~> 2.2.5)
+  - Bugtags
+  - Charts (~> 2.2.5)
+  - CocoaAsyncSocket (~> 7.4.3)
+  - CocoaLumberjack (~> 2.2.0)
+  - FMDB (~> 2.6.2)
+  - KTCenterFlowLayout (~> 1.1.1)
+  - KVOController (~> 1.0.3)
+  - Mantle (~> 2.0.5)
+  - Masonry (~> 0.6.3)
+  - NSDate+Calendar (~> 0.0.8)
+  - SVProgressHUD (~> 2.0.3)
+  - SVPullToRefresh (~> 0.4.1)
+  - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - UIActivityIndicator-for-SDWebImage+UIButton (~> 1.2)
+  - UICKeyChainStore (~> 2.1.0)
+  - UMengAnalytics (~> 4.0.4)
+  - UMengSocialCOM (~> 5.2.1)
+
+SPEC CHECKSUMS:
+  AFNetworkActivityLogger: 121486778117d53b3ab1c61d264b88081d0c3eee
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  BaiduMapKit: de2a726d5296d6b2dc0e974b683af73153608dcd
+  BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
+  Bugtags: 321c2556d819382d6cf3dc5f7f4689e4ec3bbd9e
+  Charts: b48fcc8d7190de910ff9e9748f5360c8ea7856e5
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  KTCenterFlowLayout: eded079c349450dea12f7cf94b424d1bc3205519
+  KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
+  Mantle: 299966b00759634931699f69cb6a30b9239b944d
+  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
+  NSDate+Calendar: 4aa9f6eb520bdbe7cfd82fbf6c7d35b9725c8188
+  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
+  SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
+  UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
+  UIActivityIndicator-for-SDWebImage+UIButton: fec60d688a1b85ea6aabf5190a9fbb3752ebd16f
+  UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
+  UMengAnalytics: 4ed421fb3bca63b26fc13c947743cabf3831d199
+  UMengSocialCOM: 074c135ce349aa4c8848d3fb8458757bcb6ffb67
+
+COCOAPODS: 0.39.0
