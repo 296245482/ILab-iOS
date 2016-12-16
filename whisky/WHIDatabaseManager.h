@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteOverDueData:(nullable NSDate *)nowDate;
 
 - (void)queryForUnUploadData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete;
+- (void)queryForRemainData:(int)limit date:(NSData*)date complete:(void (^)(NSArray * _Nonnull))complete;
 - (void)updateToUpload:(NSArray *)pmData;
 
 @end

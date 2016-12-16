@@ -147,7 +147,7 @@ static WHIDatabaseManager *manager = nil;
                 sum = sum / count;
                 breathSum = breathSum / count;
             }
-            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
+//            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
             [pmResult addObject:@(sum)];
             [breathResult addObject:@(breathSum)];
         }
@@ -182,7 +182,7 @@ static WHIDatabaseManager *manager = nil;
                 sum = sum / count;
                 breathSum = breathSum / count;
             }
-            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
+//            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
             [pmResult addObject:@(sum)];
             [breathResult addObject:@(breathSum)];
         }
@@ -217,7 +217,7 @@ static WHIDatabaseManager *manager = nil;
                 sum = sum / count;
                 breathSum = breathSum / count;
             }
-            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
+//            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
             [pmResult addObject:@(sum)];
             [breathResult addObject:@(breathSum)];
         }
@@ -247,6 +247,38 @@ static WHIDatabaseManager *manager = nil;
     [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         NSMutableArray *result = [NSMutableArray array];
         NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PMData where upload = ? or upload is null ORDER BY date DESC LIMIT %d", limit];
+        FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
+        while ([queryResult next]) {
+            WHIData *data = [[WHIData alloc] init];
+            double timePoint = [queryResult doubleForColumn:@"date"];
+            data.date = [NSDate dateWithTimeIntervalSince1970:timePoint];
+            data.pm25 =  [queryResult doubleForColumn:@"PM"];
+            data.ventilation_volume = [queryResult doubleForColumn:@"ventilation_volume"];
+            data.outdoor = [queryResult boolForColumn:@"outdoor"];
+            data.steps = [queryResult intForColumn:@"steps"];
+            data.avg_rate = [queryResult doubleForColumn:@"avg_rate"];
+            data.source = [queryResult intForColumn:@"source"];
+            data.longitude = [queryResult doubleForColumn:@"longitude"];
+            data.latitude = [queryResult doubleForColumn:@"latitude"];
+            data.status = [queryResult intForColumn:@"status"];
+            data.databaseid = [queryResult intForColumn:@"id"];
+            data.upload = [queryResult boolForColumn:@"upload"];
+            [result addObject:data];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(result);
+        });
+    }];
+}
+
+
+- (void)queryForRemainData:(int)limit date:(NSDate *)date complete:(void (^)(NSArray * _Nonnull))complete{
+    if (limit == 0) {
+        limit = 10;
+    }
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSMutableArray *result = [NSMutableArray array];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PMData where (upload = ? or upload is null) and date < '%@' ORDER BY date DESC LIMIT %d", date, limit];
         FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
         while ([queryResult next]) {
             WHIData *data = [[WHIData alloc] init];

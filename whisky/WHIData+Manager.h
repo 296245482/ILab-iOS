@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toParams;
 
 + (void)upload:(NSArray *)result complete:(ArrayCompleteBlock)complete;
++ (void)uploadRemains:(NSArray *)result logOutUserId:(NSString *)uid complete:(ArrayCompleteBlock)complete;
 
 @end
 
