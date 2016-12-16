@@ -39,8 +39,11 @@
     if (self = [super init]) {
         self.bmkMapManager = [[BMKMapManager alloc] init];
         BOOL res = [self.bmkMapManager start:@"opVCwcukovz38pMGfxaB1lUwgvOo7mG3" generalDelegate:self];
+//        BOOL res = [self.bmkMapManager start:@"RGS0VWvo4GBzr2shrqVwt4caFj69yuQu" generalDelegate:self];
         if (!res) {
             DDLogDebug(@"manager start failed!");
+        }else{
+            NSLog(@"tried location started");
         }
         self.geocodesearch = [[BMKGeoCodeSearch alloc] init];
         self.geocodesearch.delegate = self;
@@ -101,17 +104,19 @@
 }
 
 - (void)willStartLocatingUser {
-    DDLogDebug(@"%s", __FUNCTION__);
+    DDLogDebug(@"tried %s", __FUNCTION__);
 }
 
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
+    NSLog(@"tried update");
     if (_coordinateCallBack) {
         _coordinateCallBack(userLocation.location, nil);
         _coordinateCallBack = nil;
     }
     self.location = userLocation.location;
-    //DDLogDebug(@"%@", self.location);
+//    DDLogDebug(@"tried update %@", self.location);
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateBMKUserLocation:)]) {
+//        NSLog(@"tried next");
         [self.delegate locationManager:self didUpdateBMKUserLocation:self.location];
     }
 }
@@ -130,10 +135,10 @@
  *@param iError 错误号
  */
 - (void)onGetNetworkState:(int)iError {
-     DDLogDebug(@"%s", __FUNCTION__);
+     DDLogDebug(@"tried %s", __FUNCTION__);
 }
 - (void)onGetPermissionState:(int)iError {
-     DDLogDebug(@"%s", __FUNCTION__);
+     DDLogDebug(@"tried %s", __FUNCTION__);
 }
 
 @end

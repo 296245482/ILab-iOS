@@ -94,12 +94,15 @@
     } else {
         userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
     }
+    NSLog(@"tried ");
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
+        NSLog(@"tried to get data");
         self.lastDate = nowDate;
         
         [[WHIUdpSocket sharedManager] trySend];
         
         NSString *deviceId = [WHIUdpSocket sharedManager].deviceId;
+        NSLog(@"device id is %@", deviceId);
         if (deviceId) {
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
                 WHIData *data = [[WHIData alloc] init];
@@ -181,6 +184,11 @@
                 [WHIGlobal sharedGlobal].pmData = data;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                 [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                    if (success) {
+                        NSLog(@"insert success");
+                    }else{
+                        NSLog(@"insert failed");
+                    }
                 }];
             }];
         }

@@ -111,6 +111,10 @@
     if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
         CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
         [locationManager requestAlwaysAuthorization];
+        
+//        NSLog(@"tried start gps1");
+//        [locationManager startUpdatingLocation];
+//        NSLog(@"tried start gps");
     }
     
     [[WHIMotionManager sharedMotionManager] getActivityState];
