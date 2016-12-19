@@ -94,9 +94,9 @@
     } else {
         userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
     }
-    NSLog(@"tried ");
+//    NSLog(@"tried ");
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
-        NSLog(@"tried to get data");
+//        NSLog(@"tried to get data");
         self.lastDate = nowDate;
         
         [[WHIUdpSocket sharedManager] trySend];

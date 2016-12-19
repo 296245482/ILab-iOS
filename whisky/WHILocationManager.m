@@ -116,7 +116,6 @@
     self.location = userLocation.location;
 //    DDLogDebug(@"tried update %@", self.location);
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateBMKUserLocation:)]) {
-//        NSLog(@"tried next");
         [self.delegate locationManager:self didUpdateBMKUserLocation:self.location];
     }
 }
