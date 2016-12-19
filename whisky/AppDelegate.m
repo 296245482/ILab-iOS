@@ -89,6 +89,10 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     NSDate *nowDate = [NSDate date];
+    
+    NSInteger status = [[WHIMotionManager sharedMotionManager] getActivityState];
+    NSLog(@"status is %ld",(long)status);
+    
     if (userLocation) {
         [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
     } else {
@@ -126,7 +130,7 @@
                         break;
                     }
                     case WHIMotionStateWalk: {
-                        baseBreath = baseBreath * 1.2;
+                        baseBreath = baseBreath * 2.1;
                         break;
                     }
                     case WHIMotionStateRunning: {
@@ -168,7 +172,7 @@
                         break;
                     }
                     case WHIMotionStateWalk: {
-                        baseBreath = baseBreath * 1.2;
+                        baseBreath = baseBreath * 2.1;
                         break;
                     }
                     case WHIMotionStateRunning: {

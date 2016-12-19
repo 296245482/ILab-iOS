@@ -675,7 +675,7 @@
 					18897C4D1C9F97FC00A7DBAF = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = KEH8SN9A36;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -691,12 +691,12 @@
 					};
 					18897C661C9F97FC00A7DBAF = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0820;
 						TestTargetID = 18897C4D1C9F97FC00A7DBAF;
 					};
 					18897C711C9F97FC00A7DBAF = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0820;
 						TestTargetID = 18897C4D1C9F97FC00A7DBAF;
 					};
 				};
@@ -979,6 +979,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1023,6 +1024,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -1064,7 +1066,7 @@
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/SinaSSO",
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/TencentOpenAPI",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn.pm;
+				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "whisky/whisky-Bridging-Header.h";
@@ -1100,7 +1102,7 @@
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/SinaSSO",
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/TencentOpenAPI",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn.pm;
+				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "whisky/whisky-Bridging-Header.h";

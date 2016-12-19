@@ -38,8 +38,8 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.bmkMapManager = [[BMKMapManager alloc] init];
-        BOOL res = [self.bmkMapManager start:@"opVCwcukovz38pMGfxaB1lUwgvOo7mG3" generalDelegate:self];
-//        BOOL res = [self.bmkMapManager start:@"RGS0VWvo4GBzr2shrqVwt4caFj69yuQu" generalDelegate:self];
+//        BOOL res = [self.bmkMapManager start:@"opVCwcukovz38pMGfxaB1lUwgvOo7mG3" generalDelegate:self];
+        BOOL res = [self.bmkMapManager start:@"ecHgM3RwWewtbX61GafDzWbHNCPXyYhm" generalDelegate:self];
         if (!res) {
             DDLogDebug(@"manager start failed!");
         }else{
