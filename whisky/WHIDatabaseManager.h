@@ -1,6 +1,6 @@
 //
 //  DatabaseManager.h
-//  whisky
+//  whisky/Users/luoye/Desktop/ILab-iOS/whisky/AppDelegate.m
 //
 //  Created by QiuFeng on 4/22/16.
 //  Copyright © 2016 www.qiufeng.me. All rights reserved.
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)insertData:(WHIData *)data complete:(void (^) (BOOL success))complete;
-- (void)getTodayData:(NSDate *)date complete:(void (^)(NSArray *breath, NSArray *pm))complete;
+- (void)getTodayData:(NSDate *)date complete:(void (^)(NSArray *breath, NSArray *pm25_concen))complete;
 - (void)getTwoHourData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete;
 - (void)getHourData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete;
 

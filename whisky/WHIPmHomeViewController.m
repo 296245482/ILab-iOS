@@ -146,7 +146,7 @@
 - (void)updateHealthAndAirLabel {
     WHIData *data = [WHIGlobal sharedGlobal].pmData;
     if (data) {
-        double outDoorPm = data.pm25;
+        double outDoorPm = data.pm25_concen;
         if (!data.outdoor) {
             outDoorPm = outDoorPm * 2;
         }
@@ -615,9 +615,10 @@
 - (void)autoUploadPMData {
     if ([WHIUserDefaults sharedDefaults].autoUpload) {
         [[WHIDatabaseManager sharedManager] queryForUnUploadData:500 complete:^(NSArray * result) {
+//            NSLog(@"result is %@", result);
             [WHIData upload:result complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
                 if (error) {
-                    
+                    NSLog(@"upload error");
                 } else {
                     for (WHIData *data in array) {
                         data.upload = YES;

@@ -9,13 +9,14 @@
 #import "WHIData+Manager.h"
 #import "WHIUser+Manager.h"
 #import "NSDate+Formatter.h"
+#import "WHIUserDefaults.h"
 
 @implementation WHIData (Manager)
 
 - (NSDictionary *)toParams {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"userid"] = [WHIUser currentUser].objectId ?: @"";
-    dic[@"time_point"] = [self.date whi_dateWithFormat:@"yyyy-MM-dd HH:mm:ss"];
+    dic[@"time_point"] = [self.time_point whi_dateWithFormat:@"yyyy-MM-dd HH:mm:ss"];
     dic[@"longitude"] = [NSString stringWithFormat:@"%lf", self.longitude];
     dic[@"latitude"] = [NSString stringWithFormat:@"%lf", self.latitude];
     if (self.outdoor) {
@@ -24,11 +25,18 @@
         dic[@"outdoor"] = @"0";
     }
     dic[@"status"] = [NSString stringWithFormat:@"%ld", (long)self.status];
-    dic[@"avg_rate"] = [NSString stringWithFormat:@"%lf", self.avg_rate];
-    dic[@"ventilation_volume"] = [NSString stringWithFormat:@"%lf", self.ventilation_volume];
-    dic[@"pm25"] = [NSString stringWithFormat:@"%lf", self.pm25];
-    dic[@"source"] = [NSString stringWithFormat:@"%ld", (long)self.source];
+    dic[@"heart_rate"] = [NSString stringWithFormat:@"%lf", self.heart_rate];
+    dic[@"ventilation_rate"] = [NSString stringWithFormat:@"%lf", self.ventilation_rate];
+    dic[@"pm25_concen"] = [NSString stringWithFormat:@"%lf", self.pm25_concen];
+    dic[@"pm25_datasource"] = [NSString stringWithFormat:@"%ld", (long)self.pm25_datasource];
     dic[@"steps"] = [NSString stringWithFormat:@"%ld", (long)self.steps];
+    
+    dic[@"database_access_token"] = self.database_access_token ?:@"";
+    dic[@"ventilation_vol"] = [NSString stringWithFormat:@"%lf", self.ventilation_vol];
+    dic[@"pm25_intake"] = [NSString stringWithFormat:@"%lf", self.pm25_intake];
+    dic[@"pm25_monitor"] = self.pm25_monitor?:@"";
+    dic[@"APP_version"] = self.APP_version?:@"error";
+    
     return dic;
 }
 
@@ -37,7 +45,7 @@
     NSString *uid = logOutId;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"userid"] = uid;
-    dic[@"time_point"] = [self.date whi_dateWithFormat:@"yyyy-MM-dd HH:mm:ss"];
+    dic[@"time_point"] = [self.time_point whi_dateWithFormat:@"yyyy-MM-dd HH:mm:ss"];
     dic[@"longitude"] = [NSString stringWithFormat:@"%lf", self.longitude];
     dic[@"latitude"] = [NSString stringWithFormat:@"%lf", self.latitude];
     if (self.outdoor) {
@@ -46,11 +54,18 @@
         dic[@"outdoor"] = @"0";
     }
     dic[@"status"] = [NSString stringWithFormat:@"%ld", (long)self.status];
-    dic[@"avg_rate"] = [NSString stringWithFormat:@"%lf", self.avg_rate];
-    dic[@"ventilation_volume"] = [NSString stringWithFormat:@"%lf", self.ventilation_volume];
-    dic[@"pm25"] = [NSString stringWithFormat:@"%lf", self.pm25];
-    dic[@"source"] = [NSString stringWithFormat:@"%ld", (long)self.source];
+    dic[@"heart_rate"] = [NSString stringWithFormat:@"%lf", self.heart_rate];
+    dic[@"ventilation_rate"] = [NSString stringWithFormat:@"%lf", self.ventilation_rate];
+    dic[@"pm25_concen"] = [NSString stringWithFormat:@"%lf", self.pm25_concen];
+    dic[@"pm25_datasource"] = [NSString stringWithFormat:@"%ld", (long)self.pm25_datasource];
     dic[@"steps"] = [NSString stringWithFormat:@"%ld", (long)self.steps];
+    
+    dic[@"database_access_token"] = self.database_access_token?:@"";
+    dic[@"ventilation_vol"] = [NSString stringWithFormat:@"%lf", self.ventilation_vol];
+    dic[@"pm25_intake"] = [NSString stringWithFormat:@"%lf", self.pm25_intake];
+    dic[@"pm25_monitor"] = self.pm25_monitor?:@"";
+    dic[@"APP_version"] = self.APP_version?:@"error";
+    
     return dic;
 }
 
@@ -59,15 +74,19 @@
         complete(nil, nil);
         return;
     }
-    
+    NSLog(@"post result is %@",result);
     NSMutableArray *arrayData = [NSMutableArray array];
     for (WHIData *data in result) {
         if (data.upload == NO) {
             [arrayData addObject:[data toParams]];
         }
     }
-    NSLog(@"post para is %@",arrayData);
-    [[WHIClient sharedClient] post:@"mobile-data/upload" parameters:@{@"data": arrayData} complete:^(id successResult, NSError * _Nullable error) {
+    
+    NSString *access_token = [WHIUserDefaults sharedDefaults].token;
+    NSDictionary *paras = @{@"access_token": access_token ?: @"",
+                            @"data": arrayData};
+    NSLog(@"token is %@",paras);
+    [[WHIClient sharedClient] post:@"new-mobile-data/upload" parameters:paras complete:^(id successResult, NSError * _Nullable error) {
         complete(result, error);
     }];
 
@@ -86,8 +105,14 @@
             [arrayData addObject:[data remainedToParams:logOutId]];
         }
     }
-    NSLog(@"post para is %@",arrayData);
-    [[WHIClient sharedClient] post:@"mobile-data/upload" parameters:@{@"data": arrayData} complete:^(id successResult, NSError * _Nullable error) {
+    
+    
+    //TODO
+    NSString *access_token = @"to be added";
+    NSDictionary *paras = @{@"access_token": access_token ?: @"",
+                            @"data": arrayData};
+    NSLog(@"token is %@",paras);
+    [[WHIClient sharedClient] post:@"new-mobile-data/upload" parameters:paras complete:^(id successResult, NSError * _Nullable error) {
         complete(result, error);
     }];
     

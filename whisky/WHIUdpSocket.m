@@ -76,8 +76,10 @@ static WHIUdpSocket *manager = nil;
     NSDictionary *myDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:data];
     if ([myDictionary isKindOfClass:[NSDictionary class]]) {
         self.deviceId = myDictionary[@"sn"];
+        NSLog(@"got device id");
     } else {
         self.deviceId = nil;
+        NSLog(@"didn't got device id");
     }
     return YES;
 }

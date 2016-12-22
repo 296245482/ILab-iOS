@@ -80,11 +80,13 @@
     }];
 }
 
+
+//TODO
 + (void)uploadRemainedData:(NSDate *)lastDate userid:(NSString *)uid {
     if ([WHIUserDefaults sharedDefaults].autoUpload) {
         [[WHIDatabaseManager sharedManager] queryForRemainData:500 date:lastDate complete:^(NSArray * result) {
             NSString *logOutUser = uid;
-            NSLog(@"user id is %@",uid);
+//            NSLog(@"user id is %@",uid);
             [WHIData uploadRemains:result logOutUserId:logOutUser complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
                 if (error) {
                     NSLog(@"upload failed");

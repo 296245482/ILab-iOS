@@ -18,6 +18,9 @@
 
 #import "WHIUdpSocket.h"
 
+#import "WHIData+Manager.h"
+#import "WHIUser+Manager.h"
+
 #import "UMSocialWechatHandler.h"
 #import "UMSocialQQHandler.h"
 #import "UMSocial.h"
@@ -88,10 +91,11 @@
 }
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
-    NSDate *nowDate = [NSDate date];
     
-    NSInteger status = [[WHIMotionManager sharedMotionManager] getActivityState];
-    NSLog(@"status is %ld",(long)status);
+    NSString *app_version = @"iOS.2016.12.21";
+    
+    
+    NSDate *nowDate = [NSDate date];
     
     if (userLocation) {
         [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
@@ -100,7 +104,7 @@
     }
 //    NSLog(@"tried ");
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
-//        NSLog(@"tried to get data");
+        
         self.lastDate = nowDate;
         
         [[WHIUdpSocket sharedManager] trySend];
@@ -110,18 +114,27 @@
         if (deviceId) {
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
                 WHIData *data = [[WHIData alloc] init];
-                data.date = nowDate;
+                
+                data.user_id = [WHIUser currentUser].objectId ?: @"";;
+                data.database_access_token = [WHIUserDefaults sharedDefaults].token;
+                data.ventilation_vol = 12345;
+                data.pm25_intake = 12345;
+                data.pm25_monitor = deviceId;
+                data.APP_version = app_version;
+                data.connection = 1;
+                
+                data.time_point = nowDate;
                 data.outdoor = NO;
                 if (result) {
-                    data.pm25 = [result.PM25 doubleValue];
+                    data.pm25_concen = [result.PM25 doubleValue];
                     if (!data.outdoor) {
-                        data.pm25 = data.pm25 / 2;
+                        data.pm25_concen = data.pm25_concen / 2;
                     }
                 }
                 
                 data.longitude = userLocation.coordinate.longitude;
                 data.latitude = userLocation.coordinate.latitude;
-                data.source = 2;
+                data.pm25_datasource = 2;
                 data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
                 double weight = [WHIUserDefaults sharedDefaults].weight;
                 double baseBreath = 7.8 * weight * 13 / 1000;
@@ -142,7 +155,7 @@
                         break;
                     }
                 }
-                data.ventilation_volume = baseBreath;
+                data.ventilation_rate = baseBreath;
                 [WHIGlobal sharedGlobal].pmData = data;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                 [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
@@ -152,18 +165,27 @@
         } else {
             [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
                 WHIData *data = [[WHIData alloc] init];
-                data.date = nowDate;
+                
+                data.user_id = [WHIUser currentUser].objectId ?: @"";;
+                data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
+                data.ventilation_vol = 12345;
+                data.pm25_intake = 12345;
+                data.pm25_monitor = deviceId;
+                data.APP_version = app_version;
+                data.connection = 1;
+                
+                data.time_point = nowDate;
                 data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
                 if (result) {
-                    data.pm25 = [result.PM25 doubleValue];
+                    data.pm25_concen = [result.PM25 doubleValue];
                     if (!data.outdoor) {
-                        data.pm25 = data.pm25 / 2;
+                        data.pm25_concen = data.pm25_concen / 2;
                     }
                 }
                 
                 data.longitude = userLocation.coordinate.longitude;
                 data.latitude = userLocation.coordinate.latitude;
-                data.source = 1;
+                data.pm25_datasource = 1;
                 data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
                 double weight = [WHIUserDefaults sharedDefaults].weight;
                 double baseBreath = 7.8 * weight * 13 / 1000;
@@ -184,9 +206,12 @@
                         break;
                     }
                 }
-                data.ventilation_volume = baseBreath;
+                data.ventilation_rate = baseBreath;
                 [WHIGlobal sharedGlobal].pmData = data;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
+                
+//                NSLog(@"data insert is %@",data);
+                
                 [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
                     if (success) {
                         NSLog(@"insert success");

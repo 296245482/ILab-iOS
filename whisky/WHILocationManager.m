@@ -108,7 +108,7 @@
 }
 
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
-    NSLog(@"tried update");
+    //NSLog(@"tried update");
     if (_coordinateCallBack) {
         _coordinateCallBack(userLocation.location, nil);
         _coordinateCallBack = nil;

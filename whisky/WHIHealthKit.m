@@ -104,7 +104,7 @@
 //    for (int i = 0; i < timerCount / kToDayInterval; i++) {
 //        NSDate *startDate = [NSDate dateWithTimeInterval:i * kToDayInterval sinceDate:[date dateToday]];
 //        NSDate *endDate = [NSDate dateWithTimeInterval:(i + 1) * kToDayInterval sinceDate:[date dateToday]];
-//        NSString *sql = [NSString stringWithFormat:@"SELECT PM FROM PMData where %f < date and date <= %f", [startDate timeIntervalSince1970], [endDate timeIntervalSince1970]];
+//        NSString *sql = [NSString stringWithFormat:@"SELECT pm25_concen FROM PMData where %f < date and date <= %f", [startDate timeIntervalSince1970], [endDate timeIntervalSince1970]];
 //        FMResultSet *queryResult = [db executeQuery:sql];
 //        float sum = 0;
 //        NSInteger count = 0;
@@ -118,7 +118,7 @@
 //        if (count != 0) {
 //            sum = sum / count;
 //        }
-//        DDLogDebug(@"Query Today PM, Start: %@ End: %@, pm: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
+//        DDLogDebug(@"Query Today PM, Start: %@ End: %@, pm25_concen: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
 //        [result addObject:@(sum)];
 //    }
 //    dispatch_async(dispatch_get_main_queue(), ^{
