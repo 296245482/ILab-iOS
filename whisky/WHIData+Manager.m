@@ -92,7 +92,7 @@
 
 }
 
-+ (void)uploadRemains:(NSArray *)result logOutUserId:(NSString *)uid complete:(ArrayCompleteBlock)complete {
++ (void)uploadRemains:(NSArray *)result logOutUserId:(NSString *)uid token:(NSString *)oldToken complete:(ArrayCompleteBlock)complete {
     if (result == nil) {
         complete(nil, nil);
         return;
@@ -107,8 +107,8 @@
     }
     
     
-    //TODO
-    NSString *access_token = @"to be added";
+    
+    NSString *access_token = oldToken;
     NSDictionary *paras = @{@"access_token": access_token ?: @"",
                             @"data": arrayData};
     NSLog(@"token is %@",paras);

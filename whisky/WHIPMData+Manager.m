@@ -60,7 +60,7 @@
             if (token_status == 2){
                 NSDate *lastLogin = result[@"last_login"];
                 
-                [self uploadRemainedData:lastLogin userid:uid];
+                [self uploadRemainedData:lastLogin userid:uid token:access_token];
                 
                 [WHIUser logOut];
                 //                NSLog(@"token here is %@",access_token);
@@ -81,13 +81,14 @@
 }
 
 
-//TODO
-+ (void)uploadRemainedData:(NSDate *)lastDate userid:(NSString *)uid {
+
++ (void)uploadRemainedData:(NSDate *)lastDate userid:(NSString *)uid token:(NSString *)access_token{
     if ([WHIUserDefaults sharedDefaults].autoUpload) {
         [[WHIDatabaseManager sharedManager] queryForRemainData:500 date:lastDate complete:^(NSArray * result) {
             NSString *logOutUser = uid;
+            NSString *oldToken = access_token;
 //            NSLog(@"user id is %@",uid);
-            [WHIData uploadRemains:result logOutUserId:logOutUser complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
+            [WHIData uploadRemains:result logOutUserId:logOutUser token:oldToken complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
                 if (error) {
                     NSLog(@"upload failed");
                 } else {

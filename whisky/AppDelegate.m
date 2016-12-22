@@ -92,7 +92,7 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     
-    NSString *app_version = @"iOS.2016.12.21";
+    NSString *app_version = @"iOS.2016.12.22";
     
     
     NSDate *nowDate = [NSDate date];
@@ -104,6 +104,11 @@
     }
 //    NSLog(@"tried ");
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
+        
+        double timePass = [nowDate timeIntervalSinceDate:_lastDate];
+        if(isnan(timePass)){
+            timePass = queryTimerDutaion;
+        }
         
         self.lastDate = nowDate;
         
@@ -117,11 +122,9 @@
                 
                 data.user_id = [WHIUser currentUser].objectId ?: @"";;
                 data.database_access_token = [WHIUserDefaults sharedDefaults].token;
-                data.ventilation_vol = 12345;
-                data.pm25_intake = 12345;
                 data.pm25_monitor = deviceId;
                 data.APP_version = app_version;
-                data.connection = 1;
+                data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
                 
                 data.time_point = nowDate;
                 data.outdoor = NO;
@@ -156,6 +159,9 @@
                     }
                 }
                 data.ventilation_rate = baseBreath;
+                data.ventilation_vol = (baseBreath * timePass) / 60;
+                data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
+                
                 [WHIGlobal sharedGlobal].pmData = data;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                 [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
@@ -168,11 +174,9 @@
                 
                 data.user_id = [WHIUser currentUser].objectId ?: @"";;
                 data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
-                data.ventilation_vol = 12345;
-                data.pm25_intake = 12345;
                 data.pm25_monitor = deviceId;
                 data.APP_version = app_version;
-                data.connection = 1;
+                data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
                 
                 data.time_point = nowDate;
                 data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
@@ -207,6 +211,9 @@
                     }
                 }
                 data.ventilation_rate = baseBreath;
+                data.ventilation_vol = (baseBreath * timePass) / 60;
+                data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
+                NSLog(@"data is %@",data);
                 [WHIGlobal sharedGlobal].pmData = data;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                 

@@ -105,7 +105,7 @@ static WHIClient *_sharedClient;
     if (configure) {
         if (configure.requiredToken) {
             if ([self.tokenConfigDelegate clientToken:self]) {
-                //TODO: throw an error
+                // throw an error
             }
         }
     }
