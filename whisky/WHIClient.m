@@ -18,7 +18,9 @@
 
 @end
 
-static NSString * const WHIBaseUrl = @"http://ilab.tongji.edu.cn/pm25/web/restful/";
+
+//服务器地址
+static NSString * const WHIBaseUrl = @"http://54.199.158.232/pm25/web/restful/";
 
 @implementation WHIClient
 

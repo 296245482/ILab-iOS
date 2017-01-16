@@ -15,11 +15,13 @@
 #import "WHIUserDefaults.h"
 #import "WHIMotionManager.h"
 #import "WHIData.h"
+#import "WHIHealthKit.h"
 
 #import "WHIUdpSocket.h"
 
 #import "WHIData+Manager.h"
 #import "WHIUser+Manager.h"
+#import "NSDate+Formatter.h"
 
 #import "UMSocialWechatHandler.h"
 #import "UMSocialQQHandler.h"
@@ -31,6 +33,7 @@
 @interface AppDelegate ()<WHILocationManagerDelegate>
 
 @property (nonatomic, strong) NSDate *lastDate;
+@property (nonatomic, assign) NSInteger stepsRecord;
 
 @end
 
@@ -92,7 +95,7 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     
-    NSString *app_version = @"iOS.2016.12.22";
+    NSString *app_version = @"iOS.2017.01.16";
     
     
     NSDate *nowDate = [NSDate date];
@@ -102,7 +105,6 @@
     } else {
         userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
     }
-//    NSLog(@"tried ");
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
         
         double timePass = [nowDate timeIntervalSinceDate:_lastDate];
@@ -110,7 +112,13 @@
             timePass = queryTimerDutaion;
         }
         
-        self.lastDate = nowDate;
+        NSLog(@"aaa last time is %@",_lastDate);
+        NSLog(@"aaa now time is  %@",nowDate);
+        [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+            if (succeed){
+                NSLog(@"aaa steps is %f",stepCount);
+            }
+        }];
         
         [[WHIUdpSocket sharedManager] trySend];
         
@@ -118,117 +126,130 @@
         NSLog(@"device id is %@", deviceId);
         if (deviceId) {
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                WHIData *data = [[WHIData alloc] init];
-                
-                data.user_id = [WHIUser currentUser].objectId ?: @"";;
-                data.database_access_token = [WHIUserDefaults sharedDefaults].token;
-                data.pm25_monitor = deviceId;
-                data.APP_version = app_version;
-                data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
-                
-                data.time_point = nowDate;
-                data.outdoor = NO;
-                if (result) {
-                    data.pm25_concen = [result.PM25 doubleValue];
-                    if (!data.outdoor) {
-                        data.pm25_concen = data.pm25_concen / 2;
+                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                    if (succeed){
+                        NSLog(@"aaa steps is %f",stepCount);
                     }
-                }
-                
-                data.longitude = userLocation.coordinate.longitude;
-                data.latitude = userLocation.coordinate.latitude;
-                data.pm25_datasource = 2;
-                data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
-                double weight = [WHIUserDefaults sharedDefaults].weight;
-                double baseBreath = 7.8 * weight * 13 / 1000;
-                switch (data.status) {
-                    case WHIMotionStateStationary: {
-                        break;
+                    
+                    WHIData *data = [[WHIData alloc] init];
+                    
+                    data.user_id = [WHIUser currentUser].objectId ?: @"";;
+                    data.database_access_token = [WHIUserDefaults sharedDefaults].token;
+                    data.pm25_monitor = deviceId;
+                    data.APP_version = app_version;
+                    data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
+                    
+                    data.time_point = nowDate;
+                    data.outdoor = NO;
+                    if (result) {
+                        data.pm25_concen = [result.PM25 doubleValue];
+                        if (!data.outdoor) {
+                            data.pm25_concen = data.pm25_concen / 2;
+                        }
                     }
-                    case WHIMotionStateWalk: {
-                        baseBreath = baseBreath * 2.1;
-                        break;
+                    
+                    data.longitude = userLocation.coordinate.longitude;
+                    data.latitude = userLocation.coordinate.latitude;
+                    data.pm25_datasource = 2;
+                    data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
+                    double weight = [WHIUserDefaults sharedDefaults].weight;
+                    double baseBreath = 7.8 * weight * 13 / 1000;
+                    switch (data.status) {
+                        case WHIMotionStateStationary: {
+                            break;
+                        }
+                        case WHIMotionStateWalk: {
+                            baseBreath = baseBreath * 2.1;
+                            break;
+                        }
+                        case WHIMotionStateRunning: {
+                            baseBreath = baseBreath * 6;
+                            break;
+                        }
+                        case WHIMotionStateBiking: {
+                            baseBreath = baseBreath * 2.1;
+                            break;
+                        }
                     }
-                    case WHIMotionStateRunning: {
-                        baseBreath = baseBreath * 6;
-                        break;
-                    }
-                    case WHIMotionStateBiking: {
-                        baseBreath = baseBreath * 2.1;
-                        break;
-                    }
-                }
-                data.ventilation_rate = baseBreath;
-                data.ventilation_vol = (baseBreath * timePass) / 60;
-                data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                
-                [WHIGlobal sharedGlobal].pmData = data;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
-                [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                    data.ventilation_rate = baseBreath;
+                    data.ventilation_vol = (baseBreath * timePass) / 60;
+                    data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
+                    data.steps = stepCount;
+                    [WHIGlobal sharedGlobal].pmData = data;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
+                    [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                    }];
                 }];
-
             }];
         } else {
             [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                WHIData *data = [[WHIData alloc] init];
-                
-                data.user_id = [WHIUser currentUser].objectId ?: @"";;
-                data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
-                data.pm25_monitor = deviceId;
-                data.APP_version = app_version;
-                data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
-                
-                data.time_point = nowDate;
-                data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
-                if (result) {
-                    data.pm25_concen = [result.PM25 doubleValue];
-                    if (!data.outdoor) {
-                        data.pm25_concen = data.pm25_concen / 2;
-                    }
-                }
-                
-                data.longitude = userLocation.coordinate.longitude;
-                data.latitude = userLocation.coordinate.latitude;
-                data.pm25_datasource = 1;
-                data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
-                double weight = [WHIUserDefaults sharedDefaults].weight;
-                double baseBreath = 7.8 * weight * 13 / 1000;
-                switch (data.status) {
-                    case WHIMotionStateStationary: {
-                        break;
-                    }
-                    case WHIMotionStateWalk: {
-                        baseBreath = baseBreath * 2.1;
-                        break;
-                    }
-                    case WHIMotionStateRunning: {
-                        baseBreath = baseBreath * 6;
-                        break;
-                    }
-                    case WHIMotionStateBiking: {
-                        baseBreath = baseBreath * 2.1;
-                        break;
-                    }
-                }
-                data.ventilation_rate = baseBreath;
-                data.ventilation_vol = (baseBreath * timePass) / 60;
-                data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                NSLog(@"data is %@",data);
-                [WHIGlobal sharedGlobal].pmData = data;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
-                
-//                NSLog(@"data insert is %@",data);
-                
-                [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
-                    if (success) {
-                        NSLog(@"insert success");
+                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                    
+                    WHIData *data = [[WHIData alloc] init];
+                    if (succeed){
+                        NSLog(@"aaa steps is %f",stepCount);
+                        data.steps = stepCount - _stepsRecord;
+                        _stepsRecord = stepCount;
                     }else{
-                        NSLog(@"insert failed");
+                        NSLog(@"aaa获取步数失败");
                     }
+                    
+                    data.user_id = [WHIUser currentUser].objectId ?: @"";;
+                    data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
+                    data.pm25_monitor = deviceId;
+                    data.APP_version = app_version;
+                    data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
+                    
+                    data.time_point = nowDate;
+                    data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
+                    if (result) {
+                        data.pm25_concen = [result.PM25 doubleValue];
+                        if (!data.outdoor) {
+                            data.pm25_concen = data.pm25_concen / 2;
+                        }
+                    }
+                    
+                    data.longitude = userLocation.coordinate.longitude;
+                    data.latitude = userLocation.coordinate.latitude;
+                    data.pm25_datasource = 1;
+                    data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
+                    double weight = [WHIUserDefaults sharedDefaults].weight;
+                    double baseBreath = 7.8 * weight * 13 / 1000;
+                    switch (data.status) {
+                        case WHIMotionStateStationary: {
+                            break;
+                        }
+                        case WHIMotionStateWalk: {
+                            baseBreath = baseBreath * 2.1;
+                            break;
+                        }
+                        case WHIMotionStateRunning: {
+                            baseBreath = baseBreath * 6;
+                            break;
+                        }
+                        case WHIMotionStateBiking: {
+                            baseBreath = baseBreath * 2.1;
+                            break;
+                        }
+                    }
+                    data.ventilation_rate = baseBreath;
+                    data.ventilation_vol = (baseBreath * timePass) / 60;
+                    data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
+                    
+                    NSLog(@"data is %@",data);
+                    [WHIGlobal sharedGlobal].pmData = data;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
+                    [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                        if (success) {
+                            NSLog(@"insert success");
+                        }else{
+                            NSLog(@"insert failed");
+                        }
+                    }];
                 }];
             }];
         }
-        
+        self.lastDate = nowDate;
     }
 }
 

@@ -14,6 +14,8 @@
 
 + (instancetype)sharedHealthKit;
 
-- (void)getTodayBreath:(NSDate *)date complete:(void (^)(NSArray * _Nonnull))complete;
+//- (void)getTodayBreath:(NSDate *)date complete:(void (^)(NSArray * _Nonnull))complete;
+- (void)queryStepCount:(NSDate *)startDate endDate:(NSDate *)endDate complete: (void (^)(double stepCount, BOOL succeed))complete;
+
 
 @end
