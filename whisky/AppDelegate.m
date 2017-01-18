@@ -30,6 +30,11 @@
 #import <Bugtags/Bugtags.h>
 #import <UMMobClick/MobClick.h>
 
+#import<SystemConfiguration/CaptiveNetwork.h>
+#import<SystemConfiguration/SystemConfiguration.h>
+#import<CoreFoundation/CoreFoundation.h>
+
+
 @interface AppDelegate ()<WHILocationManagerDelegate>
 
 @property (nonatomic, strong) NSDate *lastDate;
@@ -120,18 +125,25 @@
             }
         }];
         
-        [[WHIUdpSocket sharedManager] trySend];
+//        [[WHIUdpSocket sharedManager] trySend];
+//        NSString *deviceId = [WHIUdpSocket sharedManager].deviceId;
         
-        NSString *deviceId = [WHIUdpSocket sharedManager].deviceId;
-        NSLog(@"device id is %@", deviceId);
+        NSString *wifiName = [self getWifiName];
+        NSString *deviceId = NULL;
+        deviceId = [[WHIDatabaseManager sharedManager]queryForDeviceId:wifiName];
+        NSLog(@"wifi name is %@,device id is %@",wifiName, deviceId);
+        
         if (deviceId) {
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                    WHIData *data = [[WHIData alloc] init];
                     if (succeed){
                         NSLog(@" steps is %f",stepCount);
+                        data.steps = stepCount - _stepsRecord;
+                        _stepsRecord = stepCount;
+                    }else{
+                        NSLog(@"获取步数失败");
                     }
-                    
-                    WHIData *data = [[WHIData alloc] init];
                     
                     data.user_id = [WHIUser currentUser].objectId ?: @"";;
                     data.database_access_token = [WHIUserDefaults sharedDefaults].token;
@@ -141,12 +153,7 @@
                     
                     data.time_point = nowDate;
                     data.outdoor = NO;
-                    if (result) {
-                        data.pm25_concen = [result.PM25 doubleValue];
-                        if (!data.outdoor) {
-                            data.pm25_concen = data.pm25_concen / 2;
-                        }
-                    }
+                    data.pm25_concen = [result.PM25 doubleValue];
                     
                     data.longitude = userLocation.coordinate.longitude;
                     data.latitude = userLocation.coordinate.latitude;
@@ -174,10 +181,16 @@
                     data.ventilation_rate = baseBreath;
                     data.ventilation_vol = (baseBreath * timePass) / 60;
                     data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                    data.steps = stepCount;
+                    
+                    NSLog(@"data is %@",data);
                     [WHIGlobal sharedGlobal].pmData = data;
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                     [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                        if (success) {
+                            NSLog(@"带有805的数据 insert success");
+                        }else{
+                            NSLog(@"insert failed");
+                        }
                     }];
                 }];
             }];
@@ -267,6 +280,20 @@
     UMConfigInstance.appKey = @"	577b2ca467e58e2274002414";
     UMConfigInstance.channelId = @"App Store";
     [Bugtags startWithAppKey:@"59656cb945c12c0419c217850fc63efe" invocationEvent:BTGInvocationEventNone];
+}
+
+- (NSString *)getWifiName{
+    NSString *wifiName = NULL;
+    CFArrayRef myArray = CNCopySupportedInterfaces();
+    if (myArray != nil) {
+        CFDictionaryRef myDict =CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
+        if (myDict != nil) {
+            NSDictionary *dict = (NSDictionary*)CFBridgingRelease(myDict);
+            wifiName = [dict valueForKey:@"SSID"];
+        }
+//        NSLog(@"wifiName:%@", wifiName);
+    }
+    return wifiName;
 }
 
 @end

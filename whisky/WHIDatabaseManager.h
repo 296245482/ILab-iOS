@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)insertDevice:(DeviceWifi *)deviceWifi complete:(void (^)(BOOL))complete;
 - (void)deleteDevice:(NSString* )deviceId;
 - (NSArray *)queryForAllDevice;
+- (NSString *)queryForDeviceId:(NSString *)wifiName;
 
 @end
 

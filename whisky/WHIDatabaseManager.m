@@ -180,6 +180,20 @@ static WHIDatabaseManager *manager = nil;
     return result;
 }
 
+- (NSString *)queryForDeviceId:(NSString *)wifiName{
+    NSString *result = NULL;
+    NSString *sql = [NSString stringWithFormat:@"SELECT device_id FROM DeviceWifi WHERE wifi = ?"];
+    FMDatabase *db = [FMDatabase databaseWithPath:_databasePath];
+    [db open];
+    FMResultSet *queryResult = [db executeQuery:sql, (wifiName)];
+    while ([queryResult next]){
+        result = [queryResult stringForColumn:@"device_id"];
+    }
+    [db close];
+    return result;
+}
+
+
 - (void)getTodayData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete {
     [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         NSInteger timerCount = [date timeIntervalSinceDate:[date dateToday]];
