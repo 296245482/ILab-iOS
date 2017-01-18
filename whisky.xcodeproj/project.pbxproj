@@ -58,6 +58,9 @@
 		18B659591CF842C700772326 /* WHIUser+Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B659581CF842C700772326 /* WHIUser+Manager.m */; };
 		18E0742D1CFEB84C005E1C32 /* WHIHelpTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */; };
 		F2DB17F7DEFCC0BA5BD57BFB /* Pods_whisky.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */; };
+		FD1BC7311E2E31E700E2B27C /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */; };
+		FD1BC7351E2E373900E2B27C /* DeviceWifi.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7341E2E373900E2B27C /* DeviceWifi.m */; };
+		FD1BC7381E2E6E6900E2B27C /* Device805TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7371E2E6E6900E2B27C /* Device805TableViewController.m */; };
 		FD6E6DC01E0C22A6009F9C9E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6E6DBF1E0C22A6009F9C9E /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -197,6 +200,12 @@
 		8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whisky.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9014CB640D93DE5722B8323 /* Pods-whisky.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whisky.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whisky/Pods-whisky.debug.xcconfig"; sourceTree = "<group>"; };
 		F9C9EA91F0033F8960E1C1B9 /* Pods-whisky.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whisky.release.xcconfig"; path = "Pods/Target Support Files/Pods-whisky/Pods-whisky.release.xcconfig"; sourceTree = "<group>"; };
+		FD1BC72F1E2E31D500E2B27C /* DeviceTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceTableViewCell.h; sourceTree = "<group>"; };
+		FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceTableViewCell.m; sourceTree = "<group>"; };
+		FD1BC7331E2E372600E2B27C /* DeviceWifi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceWifi.h; sourceTree = "<group>"; };
+		FD1BC7341E2E373900E2B27C /* DeviceWifi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceWifi.m; sourceTree = "<group>"; };
+		FD1BC7361E2E6E6900E2B27C /* Device805TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device805TableViewController.h; sourceTree = "<group>"; };
+		FD1BC7371E2E6E6900E2B27C /* Device805TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Device805TableViewController.m; sourceTree = "<group>"; };
 		FD6E6DBF1E0C22A6009F9C9E /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -271,6 +280,7 @@
 		183BB4041CC9D6F5006D8EA7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FD1BC7321E2E370800E2B27C /* DeviceWifiPair */,
 				18B659491CF6EDCC00772326 /* WHIUser */,
 				18378AAB1CE185E80051665C /* WHIBaseDataSource.h */,
 				18378AAC1CE185E80051665C /* WHIBaseDataSource.m */,
@@ -543,6 +553,8 @@
 				1882097B1CF6A91D00FF2702 /* WHIBluetoothTableViewController.m */,
 				18E0742B1CFEB84C005E1C32 /* WHIHelpTableViewController.h */,
 				18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */,
+				FD1BC7361E2E6E6900E2B27C /* Device805TableViewController.h */,
+				FD1BC7371E2E6E6900E2B27C /* Device805TableViewController.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -552,6 +564,8 @@
 			children = (
 				18B6593E1CF6D2A100772326 /* WHIBluetoothTableViewCell.h */,
 				18B6593F1CF6D2A100772326 /* WHIBluetoothTableViewCell.m */,
+				FD1BC72F1E2E31D500E2B27C /* DeviceTableViewCell.h */,
+				FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -601,6 +615,15 @@
 				8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FD1BC7321E2E370800E2B27C /* DeviceWifiPair */ = {
+			isa = PBXGroup;
+			children = (
+				FD1BC7331E2E372600E2B27C /* DeviceWifi.h */,
+				FD1BC7341E2E373900E2B27C /* DeviceWifi.m */,
+			);
+			name = DeviceWifiPair;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -865,8 +888,10 @@
 				1800C2611CED96A4009018BB /* WHIPmHomeViewController.m in Sources */,
 				184F6D791D52D61700D04AB9 /* WHIForgetPasswordViewController.m in Sources */,
 				183BB4191CC9EA9A006D8EA7 /* UIAlertController+ShowAlertMessage.m in Sources */,
+				FD1BC7381E2E6E6900E2B27C /* Device805TableViewController.m in Sources */,
 				18378AAD1CE185E80051665C /* WHIBaseDataSource.m in Sources */,
 				1872F6421CD0BDB30009302E /* NSValue+Location.m in Sources */,
+				FD1BC7311E2E31E700E2B27C /* DeviceTableViewCell.m in Sources */,
 				18A010AC1CF310D700209D27 /* WHIGlobal.m in Sources */,
 				18B6594C1CF6EDDB00772326 /* WHIUser.m in Sources */,
 				1882097C1CF6A91D00FF2702 /* WHIBluetoothTableViewController.m in Sources */,
@@ -884,6 +909,7 @@
 				188A52AF1D17B08500106FC9 /* WHIUdpSocket.m in Sources */,
 				18E0742D1CFEB84C005E1C32 /* WHIHelpTableViewController.m in Sources */,
 				186B7C091D348C9F00174FD4 /* WHIPrivacyViewController.m in Sources */,
+				FD1BC7351E2E373900E2B27C /* DeviceWifi.m in Sources */,
 				183BB4241CC9FB01006D8EA7 /* WHILocationManager.m in Sources */,
 				183BB42C1CCA0413006D8EA7 /* WHIDatabaseManager.m in Sources */,
 				18625F9D1CCE10D900251FC7 /* BMKAddressComponent+Coding.m in Sources */,

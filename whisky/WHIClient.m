@@ -20,7 +20,7 @@
 
 
 //服务器地址
-static NSString * const WHIBaseUrl = @"http://54.199.158.232/pm25/web/restful/";
+static NSString * const WHIBaseUrl = @"http://54.64.196.87/pm25/web/restful/";
 
 @implementation WHIClient
 

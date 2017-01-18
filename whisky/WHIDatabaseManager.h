@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "WHIData.h"
+#import "DeviceWifi.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)queryForUnUploadData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete;
 - (void)queryForRemainData:(int)limit date:(NSData*)date complete:(void (^)(NSArray * _Nonnull))complete;
 - (void)updateToUpload:(NSArray *)pmData;
+
+- (void)insertDevice:(DeviceWifi *)deviceWifi complete:(void (^)(BOOL))complete;
+- (void)deleteDevice:(NSString* )deviceId;
+- (NSArray *)queryForAllDevice;
 
 @end
 

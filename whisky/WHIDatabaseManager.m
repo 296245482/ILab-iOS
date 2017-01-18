@@ -65,8 +65,15 @@ static WHIDatabaseManager *manager = nil;
                 DDLogDebug(@"succ to creating db table");
             }
         }
-        
-        
+        if (![db tableExists:@"DeviveWifi"]) {
+            NSString * sql = @"CREATE TABLE 'DeviceWifi' ('id' INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL , 'device_id' VERCHAR(32), 'wifi' VERCHAR(64))";
+            BOOL res = [db executeUpdate:sql];
+            if (!res) {
+                DDLogDebug(@"error when creating Device wifi table");
+            } else {
+                DDLogDebug(@"succ to creating Device Wifi table");
+            }
+        }
         [db close];
     }
 }
@@ -122,6 +129,55 @@ static WHIDatabaseManager *manager = nil;
             complete(YES);
         });
     }];
+}
+
+- (void)insertDevice:(DeviceWifi *)deviceWifi complete:(void (^)(BOOL))complete {
+    if (deviceWifi == nil) {
+        complete(NO);
+    }
+    if (deviceWifi.deviceId == nil) {
+        complete(NO);
+    }
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback){
+       NSString *sql = @"insert into DeviceWifi (device_id, wifi) values (?, ?)";
+        BOOL success = [db executeUpdate:sql, (deviceWifi.deviceId), (deviceWifi.wifiName)];
+        if(!success){
+            NSLog(@"插入失败");
+            *rollback = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete(NO);
+            });
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(YES);
+        });
+    }];
+}
+
+- (void)deleteDevice:(NSString* )deviceId {
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSString *sql = [NSString stringWithFormat:@"Delete From DeviceWifi where device_id = ?"];
+        BOOL success = [db executeUpdate:sql, (deviceId)];
+        if (!success) {
+            *rollback = YES;
+        }else{
+            NSLog(@"删除成功");
+        }
+    }];
+}
+
+- (NSArray *)queryForAllDevice{
+    NSMutableArray *result = [NSMutableArray array];
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM DeviceWifi"];
+        FMResultSet *queryResult = [db executeQuery:sql];
+        while ([queryResult next]) {
+            DeviceWifi *device = [[DeviceWifi alloc]initWithDevice:[queryResult stringForColumn:@"device_id"] initWithWifi:[queryResult stringForColumn:@"wifi"]];
+            [result addObject:device];
+        }
+    }];
+    return result;
 }
 
 - (void)getTodayData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete {

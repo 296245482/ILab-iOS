@@ -112,11 +112,11 @@
             timePass = queryTimerDutaion;
         }
         
-        NSLog(@"aaa last time is %@",_lastDate);
-        NSLog(@"aaa now time is  %@",nowDate);
+        NSLog(@" last time is %@",_lastDate);
+        NSLog(@" now time is  %@",nowDate);
         [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
             if (succeed){
-                NSLog(@"aaa steps is %f",stepCount);
+                NSLog(@" steps is %f",stepCount);
             }
         }];
         
@@ -128,7 +128,7 @@
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
                 [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
                     if (succeed){
-                        NSLog(@"aaa steps is %f",stepCount);
+                        NSLog(@" steps is %f",stepCount);
                     }
                     
                     WHIData *data = [[WHIData alloc] init];
@@ -187,11 +187,11 @@
                     
                     WHIData *data = [[WHIData alloc] init];
                     if (succeed){
-                        NSLog(@"aaa steps is %f",stepCount);
+                        NSLog(@" steps is %f",stepCount);
                         data.steps = stepCount - _stepsRecord;
                         _stepsRecord = stepCount;
                     }else{
-                        NSLog(@"aaa获取步数失败");
+                        NSLog(@"获取步数失败");
                     }
                     
                     data.user_id = [WHIUser currentUser].objectId ?: @"";;
