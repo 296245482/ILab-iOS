@@ -64,7 +64,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>wechat</string>
@@ -106,10 +106,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>应用需要您的位置信息来判断PM2.5的浓度</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string></string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>应用需要您的位置信息来判断PM2.5的浓度</string>
 	<key>NSMotionUsageDescription</key>
 	<string></string>
 	<key>UIBackgroundModes</key>
