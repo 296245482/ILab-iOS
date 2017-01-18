@@ -38,7 +38,6 @@
 @interface AppDelegate ()<WHILocationManagerDelegate>
 
 @property (nonatomic, strong) NSDate *lastDate;
-@property (nonatomic, assign) NSInteger stepsRecord;
 
 @end
 
@@ -117,13 +116,18 @@
             timePass = queryTimerDutaion;
         }
         
-        NSLog(@" last time is %@",_lastDate);
-        NSLog(@" now time is  %@",nowDate);
-        [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
-            if (succeed){
-                NSLog(@" steps is %f",stepCount);
-            }
-        }];
+//        NSLog(@" last time is %@",_lastDate);
+//        NSLog(@" now time is  %@",nowDate);
+//        [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+//            if (succeed){
+//                NSLog(@" steps is %f",stepCount);
+//            }
+//        }];
+//        _lastDate = [NSDate dateWithYear:2017 month:01 day:17 hour:00 minute:00 second:00];
+//        [self getStepsByStartDate:_lastDate andCurrentDate:nowDate];
+//        NSLog(@" last time is %@",_lastDate);
+//        NSLog(@" now time is  %@",nowDate);
+        
         
 //        [[WHIUdpSocket sharedManager] trySend];
 //        NSString *deviceId = [WHIUdpSocket sharedManager].deviceId;
@@ -131,16 +135,18 @@
         NSString *wifiName = [self getWifiName];
         NSString *deviceId = NULL;
         deviceId = [[WHIDatabaseManager sharedManager]queryForDeviceId:wifiName];
-        NSLog(@"wifi name is %@,device id is %@",wifiName, deviceId);
+//        NSLog(@"wifi name is %@,device id is %@",wifiName, deviceId);
         
         if (deviceId) {
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
+//                [self getStepsByStartDate:_lastDate andCurrentDate:nowDate];
+                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                    self.lastDate = nowDate;
+                    
                     WHIData *data = [[WHIData alloc] init];
                     if (succeed){
                         NSLog(@" steps is %f",stepCount);
-                        data.steps = stepCount - _stepsRecord;
-                        _stepsRecord = stepCount;
+                        data.steps = stepCount;
                     }else{
                         NSLog(@"获取步数失败");
                     }
@@ -196,13 +202,12 @@
             }];
         } else {
             [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
-                    
+                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                    self.lastDate = nowDate;
                     WHIData *data = [[WHIData alloc] init];
                     if (succeed){
                         NSLog(@" steps is %f",stepCount);
-                        data.steps = stepCount - _stepsRecord;
-                        _stepsRecord = stepCount;
+                        data.steps = stepCount;
                     }else{
                         NSLog(@"获取步数失败");
                     }
@@ -262,7 +267,7 @@
                 }];
             }];
         }
-        self.lastDate = nowDate;
+        
     }
 }
 
@@ -294,6 +299,15 @@
 //        NSLog(@"wifiName:%@", wifiName);
     }
     return wifiName;
+}
+
+- (void)getStepsByStartDate:(NSDate *)startDate andCurrentDate:(NSDate *)currentDate
+{
+    [[WHIHealthKit sharedHealthKit] queryStepCount:startDate endDate:currentDate complete:^(double stepCount, BOOL succeed){
+        if (succeed){
+            NSLog(@" steps is %f",stepCount);
+        }
+    }];
 }
 
 @end
