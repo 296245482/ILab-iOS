@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, WHIPMSource) {
 @property (nonatomic, copy) NSNumber *AQI;
 @property (nonatomic, copy) NSNumber *PM25;
 @property (nonatomic, assign) WHIPMSource source;
+@property (nonatomic, strong) NSString *lastRecordTime;
 
 @end
 

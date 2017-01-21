@@ -29,16 +29,16 @@ static const DDLogLevel ddLogLevel = DDLogLevelAll;
 static const DDLogLevel ddLogLevel = DDLogLevelError;
 #endif
 
-#define kTodayDataRefreshTimer 1800        //今日 pm 半小时刷新一次
-#define kToDayInterval 1800            //今日 pm 30分钟一个点
+#define kTodayDataRefreshTimer 1800         //今日 pm 半小时刷新一次
+#define kToDayInterval 1800                 //今日 pm 30分钟一个点
 
-#define kHourInterval 300            //1分钟 近2小时 5分钟一个点
-#define kHourDataRefreshTimer 120      //2分钟 刷新一次
+#define kHourInterval 300                   //1分钟 近2小时 5分钟一个点
+#define kHourDataRefreshTimer 120           //2分钟 刷新一次
 
 #define kWeekInterval 86400
 
 
-#define queryTimerDutaion 30
-
+#define queryTimerDutaion 30                //查询间隔时间
+#define deviceExpireTime 3600               //805设备数据失效时间
 
 #endif /* WhiskyPrefixHeader_pch */
