@@ -60,7 +60,6 @@
     
     NSDictionary *params = @{@"longitude": @(location.longitude),
                              @"latitude": @(location.latitude),
-                             @"use_station": @(1),
                              @"access_token": access_token ?: @""};
     [[WHIClient sharedClient] get:@"urban-airs/search" parameters:params complete:^(id  _Nullable result, NSError * _Nullable error) {
         if (error) {

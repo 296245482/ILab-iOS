@@ -99,7 +99,7 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     
-    NSString *app_version = @"iOS.2017.01.21";
+    NSString *app_version = @"iOS.2017.02.20";
     
     
     NSDate *nowDate = [NSDate date];
@@ -147,13 +147,13 @@
                                     data.pm25_concen = data.pm25_concen / 2;
                                 }
                             }
-                            data.pm25_datasource = 1;
+                            data.pm25_datasource = result.source;
                         }else {
                             //805可用
                             data.pm25_monitor = deviceId;
                             data.outdoor = NO;
                             data.pm25_concen = [result.PM25 doubleValue];
-                            data.pm25_datasource = 2;
+                            data.pm25_datasource = 3;
                         }
                         if (succeed){
                             NSLog(@" steps is %f",stepCount);
@@ -236,7 +236,7 @@
                     
                     data.longitude = userLocation.coordinate.longitude;
                     data.latitude = userLocation.coordinate.latitude;
-                    data.pm25_datasource = 1;
+                    data.pm25_datasource = result.source;
                     data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
                     double weight = [WHIUserDefaults sharedDefaults].weight;
                     double baseBreath = 7.8 * weight * 13 / 1000;
