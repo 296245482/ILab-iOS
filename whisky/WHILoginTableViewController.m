@@ -8,6 +8,7 @@
 
 #import "WHILoginTableViewController.h"
 #import "WHIUser+Manager.h"
+#import "customKeyChainTool.h"
 
 @interface WHILoginTableViewController ()
 
@@ -18,7 +19,10 @@
 @end
 
 @implementation WHILoginTableViewController
-
+- (void)viewDidLoad {
+    self.nameTextField.text = [(NSMutableDictionary*)[customKeyChainTool load:@"namePasswdPair"] objectForKey:@"name"];
+    self.passwordTextField.text = [(NSMutableDictionary*)[customKeyChainTool load:@"namePasswdPair"] objectForKey:@"password"];
+}
 
 - (IBAction)doneButtonTouchUpInSide:(WHIActivityIndicatorButton *)sender {
     NSString *name = self.nameTextField.text;
@@ -31,6 +35,10 @@
         } else {
             [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"登录成功", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
+            NSMutableDictionary *userNamePasswdPair = [NSMutableDictionary dictionary];
+            [userNamePasswdPair setObject:self.nameTextField.text forKey:@"name"];
+            [userNamePasswdPair setObject:self.passwordTextField.text forKey:@"password"];
+            [customKeyChainTool save:@"namePasswdPair" data:userNamePasswdPair];
         }
     }];
 }

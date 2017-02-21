@@ -43,6 +43,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    _user = [WHIUser currentUser];
     self.nikeNameLabel.text = self.user.name;
 }
 
