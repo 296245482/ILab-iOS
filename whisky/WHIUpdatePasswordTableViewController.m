@@ -40,6 +40,7 @@
 - (IBAction)confirmButtonTouchUpInside:(id)sender {
     NSString *old = self.oldTextField.text ?: @"";
     NSString *password = self.passwordTextField.text ?: @"";
+    
     if ([old isEqualToString:@""]) {
         UIAlertController *alert = [UIAlertController whi_alertControllerWithAlertMessage: NSLocalizedStringFromTable(@"原密码为空", @"LocalizedString", nil)];
         [self presentViewController:alert animated:YES completion:nil];
@@ -53,12 +54,14 @@
         return;
     }
 
+    self.user = [WHIUser currentUser];
     [self.user updatePassword:password complete:^(BOOL success, NSError * _Nullable error) {
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         } else {
             [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"密码修改成功", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
+            //[WHIUser logOut];
         }
     }];
 }

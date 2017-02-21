@@ -52,9 +52,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+//登陆后点任意均退出
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [WHIUser logOut];
+    if(indexPath.row == 1){
+        [WHIUser logOut];
+    }
+    
 }
 
 

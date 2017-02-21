@@ -118,7 +118,7 @@ static NSString *__token;
 
 - (void)updatePassword:(NSString *)password complete:(BoolCompleteBlock)complete {
     NSDictionary *params = @{@"name": self.name ?: @"",
-                             @"access_token": [WHIUser token] ?: @"",
+                             @"access_token": [WHIUserDefaults sharedDefaults].token ?: @"",
                              @"password": password};
     [[WHIClient sharedClient] post:@"users/updatepassword" parameters:params complete:^(id  _Nullable result, NSError * _Nullable error) {
         if (result) {
