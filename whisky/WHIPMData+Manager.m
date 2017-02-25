@@ -35,6 +35,8 @@
             if(token_status == 2){
                 NSDate *lastLogin = result[@"last_login"];
                 [self uploadRemainedData:lastLogin userid:uid token:access_token];
+                
+                [self logoutByOthers];
                 [WHIUser logOut];
             }else{
                 if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result count] >= 1) {
@@ -76,6 +78,7 @@
                 
                 [self uploadRemainedData:lastLogin userid:uid token:access_token];
                 
+                [self logoutByOthers];
                 [WHIUser logOut];
                 //                NSLog(@"token here is %@",access_token);
             }else{
@@ -115,6 +118,12 @@
             }];
         }];
     }
+}
+
++ (void)logoutByOthers{
+    //弹窗
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"你的账号在异地登录，本设备处于离线状态" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+    [alertView show];
 }
 
 @end
