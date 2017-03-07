@@ -9,6 +9,7 @@
 #import "WHILoginTableViewController.h"
 #import "WHIUser+Manager.h"
 #import "customKeyChainTool.h"
+#import "WHIUserDefaults.h"
 
 @interface WHILoginTableViewController ()
 
@@ -35,6 +36,9 @@
         } else {
             [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"登录成功", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
+            
+            [WHIUserDefaults sharedDefaults].autoUpload = 1;
+            
             NSMutableDictionary *userNamePasswdPair = [NSMutableDictionary dictionary];
             [userNamePasswdPair setObject:self.nameTextField.text forKey:@"name"];
             [userNamePasswdPair setObject:self.passwordTextField.text forKey:@"password"];
