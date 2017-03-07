@@ -62,6 +62,7 @@
 		FD1BC7351E2E373900E2B27C /* DeviceWifi.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7341E2E373900E2B27C /* DeviceWifi.m */; };
 		FD1BC7381E2E6E6900E2B27C /* Device805TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7371E2E6E6900E2B27C /* Device805TableViewController.m */; };
 		FD6E6DC01E0C22A6009F9C9E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6E6DBF1E0C22A6009F9C9E /* HealthKit.framework */; };
+		FDA532361E5C31CA00EEABC7 /* customKeyChainTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDA532351E5C31CA00EEABC7 /* customKeyChainTool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,6 +208,8 @@
 		FD1BC7361E2E6E6900E2B27C /* Device805TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device805TableViewController.h; sourceTree = "<group>"; };
 		FD1BC7371E2E6E6900E2B27C /* Device805TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Device805TableViewController.m; sourceTree = "<group>"; };
 		FD6E6DBF1E0C22A6009F9C9E /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		FDA532341E5C31CA00EEABC7 /* customKeyChainTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = customKeyChainTool.h; sourceTree = "<group>"; };
+		FDA532351E5C31CA00EEABC7 /* customKeyChainTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = customKeyChainTool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +283,7 @@
 		183BB4041CC9D6F5006D8EA7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FDA532331E5C314400EEABC7 /* KeyChain */,
 				FD1BC7321E2E370800E2B27C /* DeviceWifiPair */,
 				18B659491CF6EDCC00772326 /* WHIUser */,
 				18378AAB1CE185E80051665C /* WHIBaseDataSource.h */,
@@ -626,6 +630,15 @@
 			name = DeviceWifiPair;
 			sourceTree = "<group>";
 		};
+		FDA532331E5C314400EEABC7 /* KeyChain */ = {
+			isa = PBXGroup;
+			children = (
+				FDA532341E5C31CA00EEABC7 /* customKeyChainTool.h */,
+				FDA532351E5C31CA00EEABC7 /* customKeyChainTool.m */,
+			);
+			name = KeyChain;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -879,6 +892,7 @@
 				1800C25B1CED6EBC009018BB /* WHIData.m in Sources */,
 				18B659521CF7044300772326 /* WHILoginProfileTableViewController.m in Sources */,
 				182D56071CE32832002BD78C /* NSDate+Formatter.m in Sources */,
+				FDA532361E5C31CA00EEABC7 /* customKeyChainTool.m in Sources */,
 				18643E321CFBF4A200FA86E0 /* WHILoginTableViewController.m in Sources */,
 				18A5F16A1CE5CE6000694FDF /* WHIMotionManager.m in Sources */,
 				18643E351CFC344100FA86E0 /* WHIData+Manager.m in Sources */,
