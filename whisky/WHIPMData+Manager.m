@@ -97,7 +97,26 @@
     }];
 }
 
-
++ (void)getForecastData:(NSString *)city complete:(forecastDataCompleteBlock)complete{
+    NSDictionary *param = @{@"city":city};
+    [[WHIClient sharedClient] getPredict:@"" parameters:param complete:^(id _Nullable result, NSError * _Nullable error){
+        if(error){
+            forecastAirData *predictData = [[forecastAirData alloc]init];
+            predictData.AQI = @"Error";
+            predictData.PM25 = @"Error";
+            predictData.HTEMP = @"Error";
+            predictData.LTEMP = @"Error";
+            complete(predictData, nil);
+        }else{
+            forecastAirData *predictData = [[forecastAirData alloc]init];
+            predictData.AQI = [NSString stringWithFormat: @"%ld", (long)[result[@"AQI"] integerValue]];
+            predictData.PM25 = [NSString stringWithFormat: @"%ld", (long)[result[@"PM25"] integerValue]];
+            predictData.HTEMP = [NSString stringWithFormat: @"%ld", (long)[result[@"HTEMP"] integerValue]];
+            predictData.LTEMP = [NSString stringWithFormat: @"%ld", (long)[result[@"LTEMP"] integerValue]];
+            complete(predictData, nil);
+        }
+    }];
+}
 
 + (void)uploadRemainedData:(NSDate *)lastDate userid:(NSString *)uid token:(NSString *)access_token{
     if ([WHIUserDefaults sharedDefaults].autoUpload) {

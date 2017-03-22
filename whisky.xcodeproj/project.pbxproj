@@ -57,6 +57,8 @@
 		18B659561CF83E0600772326 /* WHIProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B659551CF83E0600772326 /* WHIProfileViewController.m */; };
 		18B659591CF842C700772326 /* WHIUser+Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B659581CF842C700772326 /* WHIUser+Manager.m */; };
 		18E0742D1CFEB84C005E1C32 /* WHIHelpTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */; };
+		8C1834111E829BAF008F4B12 /* forecastAirData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1834101E829BAF008F4B12 /* forecastAirData.m */; };
+		8CA87D381E7EB653000F07BD /* ForecastTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */; };
 		F2DB17F7DEFCC0BA5BD57BFB /* Pods_whisky.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */; };
 		FD1BC7311E2E31E700E2B27C /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */; };
 		FD1BC7351E2E373900E2B27C /* DeviceWifi.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7341E2E373900E2B27C /* DeviceWifi.m */; };
@@ -198,6 +200,10 @@
 		18DC958F1CEAE36500A54086 /* whisky-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "whisky-Bridging-Header.h"; sourceTree = "<group>"; };
 		18E0742B1CFEB84C005E1C32 /* WHIHelpTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHIHelpTableViewController.h; sourceTree = "<group>"; };
 		18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHIHelpTableViewController.m; sourceTree = "<group>"; };
+		8C18340F1E829BAF008F4B12 /* forecastAirData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forecastAirData.h; sourceTree = "<group>"; };
+		8C1834101E829BAF008F4B12 /* forecastAirData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = forecastAirData.m; sourceTree = "<group>"; };
+		8CA87D361E7EB653000F07BD /* ForecastTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastTableViewController.h; sourceTree = "<group>"; };
+		8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastTableViewController.m; sourceTree = "<group>"; };
 		8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whisky.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9014CB640D93DE5722B8323 /* Pods-whisky.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whisky.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whisky/Pods-whisky.debug.xcconfig"; sourceTree = "<group>"; };
 		F9C9EA91F0033F8960E1C1B9 /* Pods-whisky.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whisky.release.xcconfig"; path = "Pods/Target Support Files/Pods-whisky/Pods-whisky.release.xcconfig"; sourceTree = "<group>"; };
@@ -255,6 +261,8 @@
 				1872F6341CD06D3E0009302E /* WHIPMData.m */,
 				1872F63C1CD0BA550009302E /* WHIPMData+Manager.h */,
 				1872F63D1CD0BA550009302E /* WHIPMData+Manager.m */,
+				8C18340F1E829BAF008F4B12 /* forecastAirData.h */,
+				8C1834101E829BAF008F4B12 /* forecastAirData.m */,
 			);
 			name = PMData;
 			sourceTree = "<group>";
@@ -553,6 +561,8 @@
 		18B6593C1CF6D28400772326 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				8CA87D361E7EB653000F07BD /* ForecastTableViewController.h */,
+				8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */,
 				1882097A1CF6A91D00FF2702 /* WHIBluetoothTableViewController.h */,
 				1882097B1CF6A91D00FF2702 /* WHIBluetoothTableViewController.m */,
 				18E0742B1CFEB84C005E1C32 /* WHIHelpTableViewController.h */,
@@ -921,6 +931,7 @@
 				18643E2F1CFBE0FC00FA86E0 /* WHIRegisterTableViewController.m in Sources */,
 				183BB40E1CC9D778006D8EA7 /* WHIClientConfigure.m in Sources */,
 				188A52AF1D17B08500106FC9 /* WHIUdpSocket.m in Sources */,
+				8CA87D381E7EB653000F07BD /* ForecastTableViewController.m in Sources */,
 				18E0742D1CFEB84C005E1C32 /* WHIHelpTableViewController.m in Sources */,
 				186B7C091D348C9F00174FD4 /* WHIPrivacyViewController.m in Sources */,
 				FD1BC7351E2E373900E2B27C /* DeviceWifi.m in Sources */,
@@ -934,6 +945,7 @@
 				18897C561C9F97FC00A7DBAF /* AppDelegate.m in Sources */,
 				1872F63E1CD0BA550009302E /* WHIPMData+Manager.m in Sources */,
 				1872F6351CD06D3E0009302E /* WHIPMData.m in Sources */,
+				8C1834111E829BAF008F4B12 /* forecastAirData.m in Sources */,
 				183BB4281CC9FC17006D8EA7 /* WHIUserDefaults.m in Sources */,
 				18897C531C9F97FC00A7DBAF /* main.m in Sources */,
 			);

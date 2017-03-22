@@ -7,6 +7,7 @@
 //
 
 #import "WHIPMData.h"
+#import "forecastAirData.h"
 #import "WHIClient.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -15,11 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 @class WHIPMData;
 
 typedef void (^PMDataCompleteBlock)           (WHIPMData *_Nullable result, NSError * _Nullable error);
+typedef void (^forecastDataCompleteBlock) (forecastAirData *_Nullable result, NSError *_Nullable error);
 
 @interface WHIPMData (Manager)
 
 + (void)getPMData:(CLLocationCoordinate2D)location complete:(PMDataCompleteBlock)complete;
 + (void)getPMDataByDevice:(NSString *)deviceId date:(NSDate *)date complete:(PMDataCompleteBlock)complete;
++ (void)getForecastData:(NSString *)city complete:(forecastDataCompleteBlock)complete;
 
 @end
 

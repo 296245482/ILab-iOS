@@ -99,7 +99,7 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     
-    NSString *app_version = @"iOS.2017.03.07";
+    NSString *app_version = @"iOS.2017.03.22";
     
     
     NSDate *nowDate = [NSDate date];

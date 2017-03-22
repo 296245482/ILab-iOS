@@ -44,6 +44,7 @@ typedef void (^taskUploadStartBlock)    (NSURLSessionUploadTask * _Nullable task
  *  不做不带token的检查
  */
 - (void)get:(NSString *)path parameters:(nullable id)params complete:(CompleteBlock)complete;
+- (void)getPredict:(NSString *)path parameters:(nullable id)params complete:(CompleteBlock)complete;
 
 /**
  *  带 configure 默认返回不在主线程 调用block 方便可以使用数据库存储

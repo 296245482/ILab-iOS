@@ -13,6 +13,8 @@
 #import "WHIData+Manager.h"
 #import "WHIUser+Manager.h"
 #import "NSDate+Formatter.m"
+#import "WHIPMData+Manager.h"
+#import "forecastAirData.h"
 
 @interface ForecastTableViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *currentCity;
@@ -30,7 +32,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self updateCity];
+    //[self updateCity];
     [self getLastWeekDetail];
     [self getAQI];
     self.outsideTime.text = @"小时";
@@ -89,7 +91,21 @@
 }
 
 - (void)getAQI{
-    
+    NSString *city = @"";
+    if ([WHIUserDefaults sharedDefaults].addressDetail.city) {
+        city = [WHIUserDefaults sharedDefaults].addressDetail.city;
+    } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
+        city = [WHIUserDefaults sharedDefaults].addressDetail.province;
+    } else {
+        city = @"未知城市";
+    }
+    self.currentCity.text = [city substringToIndex:([city length]-1)];
+    [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
+        if(result){
+            self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
+            self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
+        }
+    }];
 }
 //- (void)viewWillAppear:(BOOL)animated {
 //    [super viewWillAppear:animated];
