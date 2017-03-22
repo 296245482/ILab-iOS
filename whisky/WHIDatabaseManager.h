@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)queryForAllDevice;
 - (NSString *)queryForDeviceId:(NSString *)wifiName;
 
+- (void)searchLastWeekData:(NSDate *)nowDate complete:(void (^)(NSArray * _Nonnull))complete;
+
 @end
 
 NS_ASSUME_NONNULL_END

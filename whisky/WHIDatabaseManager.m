@@ -311,6 +311,29 @@ static WHIDatabaseManager *manager = nil;
     }];
 }
 
+
+- (void)searchLastWeekData:(NSDate *)nowDate complete:(void (^)(NSArray * _Nonnull))complete {
+    NSDate *date = nowDate ?: [NSDate date];
+    NSDate *weekDate = [date dateByAddingWeek:-1];
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSMutableArray *result = [NSMutableArray array];
+        NSString *sql = [NSString stringWithFormat:@"SELECT time_point, ventilation_vol, outdoor From PMData where time_point > %f", [weekDate timeIntervalSince1970]];
+        FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
+        NSLog(@"query for lastweek time");
+        while ([queryResult next]) {
+            WHIData *data = [[WHIData alloc] init];
+            double timePoint = [queryResult doubleForColumn:@"time_point"];
+            data.time_point = [NSDate dateWithTimeIntervalSince1970:timePoint];
+            data.ventilation_vol = [queryResult doubleForColumn:@"ventilation_vol"];
+            data.outdoor = [queryResult boolForColumn:@"outdoor"];
+            [result addObject:data];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(result);
+        });
+    }];
+}
+
 - (void)queryForUnUploadData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete {
     if (limit == 0) {
         limit = 10;
