@@ -86,6 +86,7 @@
 
 @property (nonatomic, strong) NSTimer *updateTimer;
 @property (nonatomic, strong) NSTimer *autoUpload;
+@property (nonatomic, strong) NSTimer *autoSetNotification;
 
 @property (nonatomic, strong) NSDate *nowDate;
 @property (nonatomic, strong) NSArray *towHourBreathData;
@@ -107,7 +108,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
    // [[WHIDatabaseManager sharedManager] showDBLog];
-    
+    //定位权限获取
     if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
         CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
         [locationManager requestAlwaysAuthorization];
@@ -115,6 +116,14 @@
 //        NSLog(@"tried start gps1");
 //        [locationManager startUpdatingLocation];
 //        NSLog(@"tried start gps");
+    }
+    //通知权限获取
+    if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        
+        // 设置通知的类型可以为弹窗提示,声音提示,应用图标数字提示
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert categories:nil];
+        // 授权通知
+        [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
     }
     
     [[WHIMotionManager sharedMotionManager] getActivityState];
@@ -132,7 +141,50 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAll) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoUploadPMData) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationEveryday) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateHealthAndAirLabel) name:@"WHIPMChangeNotification" object:nil];
+}
+
+- (void)notificationEveryday{
+    NSString *city = @"";
+    if ([WHIUserDefaults sharedDefaults].addressDetail.city) {
+        city = [WHIUserDefaults sharedDefaults].addressDetail.city;
+    } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
+        city = [WHIUserDefaults sharedDefaults].addressDetail.province;
+    } else {
+        city = @"未知城市";
+    }
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        if (nil != notification)
+        {
+            // 设置弹出通知的时间
+            NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"HH:mm"];
+            NSDate *nowDate = [dateFormatter dateFromString:@"19:00"];//[NSDate dateWithTimeIntervalSinceNow:20.0];
+            //设置通知弹出的时间
+            notification.fireDate = nowDate;
+            //设置重复重复间隔为每天
+            notification.repeatInterval = kCFCalendarUnitDay;
+            // 设置时区
+            notification.timeZone= [NSTimeZone defaultTimeZone];
+            //设置提示消息
+            if ([UIDevice currentDevice].systemVersion.floatValue >= 8.2) {
+                notification.alertTitle = @"明日空气质量提醒";
+            }
+            notification.alertBody = [NSString stringWithFormat:@"明日AQI为：%@",result.AQI];
+            // 设置启动通知的声音
+            notification.soundName = UILocalNotificationDefaultSoundName;
+            // 启动通知
+            notification.hasAction = YES;
+            notification.alertLaunchImage = @"111";
+            notification.applicationIconBadgeNumber = 0;
+            notification.alertAction = @"查看";
+            [[UIApplication sharedApplication]scheduleLocalNotification:notification];
+            NSLog(@"notification 启动成功");
+        }
+    }];
 }
 
 - (void)startTimer {
@@ -140,7 +192,9 @@
     [self.updateTimer fire];
     
     self.autoUpload = [NSTimer scheduledTimerWithTimeInterval:1800 target:self selector:@selector(autoUploadPMData) userInfo:nil repeats:YES];
+    self.autoSetNotification = [NSTimer scheduledTimerWithTimeInterval:43200 target:self selector:@selector(notificationEveryday) userInfo:nil repeats:YES];
     [self.autoUpload fire];
+    [self.autoSetNotification fire];
 }
 
 - (void)updateHealthAndAirLabel {

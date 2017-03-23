@@ -56,6 +56,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [application setApplicationIconBadgeNumber:0];
     [self setupThirdPart:launchOptions];
     [self setupUmengShare];
     [WHILocationManager sharedManager].delegate = self;
@@ -99,7 +100,7 @@
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
     
-    NSString *app_version = @"iOS.2017.03.22";
+    NSString *app_version = @"iOS.2017.03.23";
     
     
     NSDate *nowDate = [NSDate date];
