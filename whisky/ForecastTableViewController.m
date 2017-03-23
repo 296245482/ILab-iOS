@@ -81,8 +81,8 @@
         }
         
         //ventilation_vol
-        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", outdoorVenVol/7000];
-        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", indoorVenVol/7000];
+        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86.4*outdoorVenVol/(outdoorTime+indoorTime))];
+        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86.4*indoorVenVol/(outdoorTime+indoorTime))];
         
         //in/out door time
         self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
