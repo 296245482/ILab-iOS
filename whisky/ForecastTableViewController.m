@@ -85,8 +85,8 @@
         self.insideVol.text = [NSString stringWithFormat:@"%.2f升", indoorVenVol/7000];
         
         //in/out door time
-        self.outsideTime.text = [NSString stringWithFormat:@"%.2f小时", outdoorTime/25200];
-        self.insideTime.text = [NSString stringWithFormat:@"%.2f小时", indoorTime/25200];
+        self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
+        self.insideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*indoorTime/(outdoorTime+indoorTime)];
     }];
 }
 
