@@ -33,8 +33,8 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     //[self updateCity];
-    [self getLastWeekDetail];
     [self getAQI];
+    [self getLastWeekDetail];
     self.outsideTime.text = @"小时";
 }
 
@@ -87,25 +87,30 @@
         //in/out door time
         self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
         self.insideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*indoorTime/(outdoorTime+indoorTime)];
+        
+        
+        NSString *city = @"";
+        if ([WHIUserDefaults sharedDefaults].addressDetail.city) {
+            city = [WHIUserDefaults sharedDefaults].addressDetail.city;
+        } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
+            city = [WHIUserDefaults sharedDefaults].addressDetail.province;
+        } else {
+            city = @"未知城市";
+        }
+        self.currentCity.text = [city substringToIndex:([city length]-1)];
+        
+        [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
+            if(result){
+                self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
+                self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
+                self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+indoorVenVol)/(outdoorTime+indoorTime))];
+            }
+        }];
     }];
 }
 
 - (void)getAQI{
-    NSString *city = @"";
-    if ([WHIUserDefaults sharedDefaults].addressDetail.city) {
-        city = [WHIUserDefaults sharedDefaults].addressDetail.city;
-    } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
-        city = [WHIUserDefaults sharedDefaults].addressDetail.province;
-    } else {
-        city = @"未知城市";
-    }
-    self.currentCity.text = [city substringToIndex:([city length]-1)];
-    [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
-        if(result){
-            self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
-            self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
-        }
-    }];
+    
 }
 //- (void)viewWillAppear:(BOOL)animated {
 //    [super viewWillAppear:animated];

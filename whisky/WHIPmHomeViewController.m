@@ -157,12 +157,12 @@
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
         UILocalNotification *notification = [[UILocalNotification alloc] init];
-        if (nil != notification)
+        if (nil != notification && ([result.AQI integerValue] > 100))
         {
             // 设置弹出通知的时间
             NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"HH:mm"];
-            NSDate *nowDate = [dateFormatter dateFromString:@"19:00"];//[NSDate dateWithTimeIntervalSinceNow:20.0];
+            NSDate *nowDate = [dateFormatter dateFromString:@"19:00"];//[NSDate dateWithTimeIntervalSinceNow:20.0];//
             //设置通知弹出的时间
             notification.fireDate = nowDate;
             //设置重复重复间隔为每天
@@ -173,7 +173,7 @@
             if ([UIDevice currentDevice].systemVersion.floatValue >= 8.2) {
                 notification.alertTitle = @"明日空气质量提醒";
             }
-            notification.alertBody = [NSString stringWithFormat:@"明日AQI为：%@",result.AQI];
+            notification.alertBody = [NSString stringWithFormat:@"明日AQI为:%@    PM25为:%@",result.AQI, result.PM25];
             // 设置启动通知的声音
             notification.soundName = UILocalNotificationDefaultSoundName;
             // 启动通知
