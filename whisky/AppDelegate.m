@@ -38,6 +38,7 @@
 @interface AppDelegate ()<WHILocationManagerDelegate>
 
 @property (nonatomic, strong) NSDate *lastDate;
+@property (nonatomic, assign) NSInteger lastSteps;
 
 @end
 
@@ -128,7 +129,7 @@
         if (deviceId) {
             //查询到有805设备
             [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
                     [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *locationResult, NSError * _Nullable error) {
                         self.lastDate = nowDate;
                         
@@ -157,8 +158,10 @@
                             data.pm25_datasource = 3;
                         }
                         if (succeed){
-                            NSLog(@" steps is %f",stepCount);
-                            data.steps = stepCount;
+                            if ((stepCount - _lastSteps) < 10000){
+                                data.steps = stepCount - _lastSteps;
+                            }
+                            _lastSteps = stepCount;
                         }else{
                             NSLog(@"获取步数失败");
                         }
@@ -210,12 +213,14 @@
             }];
         } else {
             [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:_lastDate endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
                     self.lastDate = nowDate;
                     WHIData *data = [[WHIData alloc] init];
                     if (succeed){
-                        NSLog(@" steps is %f",stepCount);
-                        data.steps = stepCount;
+                        if ((stepCount - _lastSteps) < 10000){
+                            data.steps = stepCount - _lastSteps;
+                        }
+                        _lastSteps = stepCount;
                     }else{
                         NSLog(@"获取步数失败");
                     }

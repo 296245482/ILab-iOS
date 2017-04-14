@@ -65,7 +65,7 @@
 
 //JC new
 -(void)queryStepCount:(NSDate *)startDate endDate:(NSDate *)endDate complete: (void (^)(double stepCount, BOOL succeed))complete {
-    NSLog(@"正在查询");
+//    NSLog(@"正在查询");
     [self getStepAuthorization];
     HKQuantityType *stepType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
     NSPredicate *predicate = [HKQuery predicateForSamplesWithStartDate:startDate endDate:endDate options:HKQueryOptionNone];
