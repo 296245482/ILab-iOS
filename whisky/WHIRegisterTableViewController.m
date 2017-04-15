@@ -34,15 +34,27 @@
         return;
     }
     
+    NSString *name = self.nickNameTextField.text;
+    if (name == nil || [name isEqualToString:@""]) {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"用户名不能为空", @"LocalizedString", nil)];
+        return;
+    }
+    
+    NSString *email = self.mailTextField.text;
+    if (email == nil || [email isEqualToString:@""]) {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"邮箱不能为空", @"LocalizedString", nil)];
+        return;
+    }
+    
     if (![password isEqualToString:self.confirmPasswordTextField.text]) {
         [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"两次密码不一致", @"LocalizedString", nil)];
         return;
     }
     
     WHIUser *user =[[WHIUser alloc] init];
-    user.name = self.nickNameTextField.text;
+    user.name = name;
     user.password = password;
-    user.email = self.mailTextField.text;
+    user.email = email;
     user.firstname = self.lastNameTextField.text;
     user.lastname = self.nameTextField.text;
     user.sex = self.genderSegmentedControl.selectedSegmentIndex + 1;
