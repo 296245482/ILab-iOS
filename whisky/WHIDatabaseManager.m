@@ -318,9 +318,7 @@ static WHIDatabaseManager *manager = nil;
     [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         NSMutableArray *result = [NSMutableArray array];
         NSString *sql = [NSString stringWithFormat:@"SELECT time_point, ventilation_vol, outdoor From PMData where time_point > %f", [weekDate timeIntervalSince1970]];
-        FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
-        NSLog(@"query for lastweek time");
-        while ([queryResult next]) {
+        FMResultSet *queryResult = [db executeQuery:sql, @(NO)];        while ([queryResult next]) {
             WHIData *data = [[WHIData alloc] init];
             double timePoint = [queryResult doubleForColumn:@"time_point"];
             data.time_point = [NSDate dateWithTimeIntervalSince1970:timePoint];

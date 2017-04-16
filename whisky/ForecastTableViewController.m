@@ -55,28 +55,41 @@
     [[WHIDatabaseManager sharedManager] searchLastWeekData:[NSDate date] complete:^(NSArray *result){
         float outdoorVenVol=0.0,indoorVenVol=0.0;
         float indoorTime=0.0, outdoorTime=0.0, lastRecordtime = 0.0;
-        for (WHIData *data in result){
-//            NSLog(@"result is %f %f %d",[data.time_point timeIntervalSince1970], data.ventilation_vol,data.outdoor);
-            float nowTime = [data.time_point timeIntervalSince1970];
-            
-            //ventilation_vol
-            if(data.outdoor == 1){
-                outdoorVenVol += data.ventilation_vol;
-            }else{
-                indoorVenVol += data.ventilation_vol;
+        if([result count] < 1100){
+            indoorTime = 3;
+            outdoorTime = 21;
+            for (WHIData *data in result){
+                if(data.outdoor == 1){
+                    outdoorVenVol += data.ventilation_vol;
+                }else{
+                    indoorVenVol += data.ventilation_vol;
+                }
             }
+            NSLog(@"result size is %lu", (unsigned long)[result count]);
+        }else{
+            for (WHIData *data in result){
+//              NSLog(@"result is %f %f %d",[data.time_point timeIntervalSince1970], data.ventilation_vol,data.outdoor);
+                float nowTime = [data.time_point timeIntervalSince1970];
             
-            //indoor/outdoor time
-            if(data.outdoor == 0){
-                if((nowTime - lastRecordtime) < 1800){
-                    indoorTime += (nowTime - lastRecordtime);
+                //ventilation_vol
+                if(data.outdoor == 1){
+                    outdoorVenVol += data.ventilation_vol;
+                }else{
+                    indoorVenVol += data.ventilation_vol;
                 }
-                lastRecordtime = nowTime;
-            }else{
-                if((nowTime - lastRecordtime) < 1800){
-                    outdoorTime += (nowTime - lastRecordtime);
+            
+                //indoor/outdoor time
+                if(data.outdoor == 0){
+                    if((nowTime - lastRecordtime) < 1800){
+                        indoorTime += (nowTime - lastRecordtime);
+                    }
+                    lastRecordtime = nowTime;
+                }else{
+                    if((nowTime - lastRecordtime) < 1800){
+                        outdoorTime += (nowTime - lastRecordtime);
+                    }
+                    lastRecordtime = nowTime;
                 }
-                lastRecordtime = nowTime;
             }
         }
         
@@ -103,7 +116,7 @@
             if(result){
                 self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
                 self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
-                self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+indoorVenVol)/(outdoorTime+indoorTime))];
+                self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
             }
         }];
     }];
