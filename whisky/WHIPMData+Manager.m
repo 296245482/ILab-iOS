@@ -28,6 +28,9 @@
                              @"access_token":access_token?: @""};
     [[WHIClient sharedClient] get:@"device-datas" parameters:params complete:^(id  _Nullable result, NSError * _Nullable error) {
         if (error) {
+            WHIPMData *pmData = [[WHIPMData alloc] init];
+            pmData.AQI = @(0);
+            pmData.PM25 = [WHIUserDefaults sharedDefaults].lastPm;
             complete(nil, error);
         }  else {
             WHIPMData *pmData;

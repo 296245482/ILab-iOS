@@ -37,8 +37,6 @@
 
 @interface AppDelegate ()<WHILocationManagerDelegate>
 
-@property (nonatomic, strong) NSDate *lastDate;
-@property (nonatomic, assign) NSInteger lastSteps;
 
 @end
 
@@ -100,187 +98,10 @@
 }
 
 - (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
-    
-    NSString *app_version = @"iOS.2017.03.27";
-    
-    
-    NSDate *nowDate = [NSDate date];
-    
     if (userLocation) {
         [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
     } else {
         userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
-    }
-    if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
-        
-        double timePass = [nowDate timeIntervalSinceDate:_lastDate];
-        if(isnan(timePass)){
-            timePass = queryTimerDutaion;
-        }
-        
-//        使用udp广播获得数据
-//        [[WHIUdpSocket sharedManager] trySend];
-//        NSString *deviceId = [WHIUdpSocket sharedManager].deviceId;
-        
-        NSString *wifiName = [self getWifiName];
-        NSString *deviceId = NULL;
-        deviceId = [[WHIDatabaseManager sharedManager]queryForDeviceId:wifiName];
-
-        if (deviceId) {
-            //查询到有805设备
-            [WHIPMData getPMDataByDevice:deviceId date:nowDate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
-                    [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *locationResult, NSError * _Nullable error) {
-                        self.lastDate = nowDate;
-                        
-                        WHIData *data = [[WHIData alloc] init];
-                        //处理805最后一条数据的时间
-                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-                        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                        NSDate *lastRecordTime = [[NSDate alloc]init];
-                        lastRecordTime = [dateFormatter dateFromString:result.lastRecordTime];
-                        if((!result.PM25) || ([nowDate timeIntervalSince1970] - [lastRecordTime timeIntervalSince1970]) >  deviceExpireTime){
-                            //805设备号无效或者数据过期
-                            NSLog(@"805 is not usable");
-                            data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
-                            if (locationResult) {
-                                data.pm25_concen = [locationResult.PM25 doubleValue];
-                                if (!data.outdoor) {
-                                    data.pm25_concen = data.pm25_concen / 2;
-                                }
-                            }
-                            data.pm25_datasource = result.source;
-                        }else {
-                            //805可用
-                            data.pm25_monitor = deviceId;
-                            data.outdoor = NO;
-                            data.pm25_concen = [result.PM25 doubleValue];
-                            data.pm25_datasource = 3;
-                        }
-                        if (succeed){
-                            if ((stepCount - _lastSteps) < 10000){
-                                data.steps = stepCount - _lastSteps;
-                            }
-                            _lastSteps = stepCount;
-                        }else{
-                            NSLog(@"获取步数失败");
-                        }
-                        
-                        data.user_id = [WHIUser currentUser].objectId ?: @"";;
-                        data.database_access_token = [WHIUserDefaults sharedDefaults].token;
-                        data.APP_version = app_version;
-                        data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
-                        data.time_point = nowDate;
-                        data.longitude = userLocation.coordinate.longitude;
-                        data.latitude = userLocation.coordinate.latitude;
-                        
-                        data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
-                        double weight = [WHIUserDefaults sharedDefaults].weight;
-                        double baseBreath = 7.8 * weight * 13 / 1000;
-                        switch (data.status) {
-                            case WHIMotionStateStationary: {
-                                break;
-                            }
-                            case WHIMotionStateWalk: {
-                                baseBreath = baseBreath * 2.1;
-                                break;
-                            }
-                            case WHIMotionStateRunning: {
-                                baseBreath = baseBreath * 6;
-                                break;
-                            }
-                            case WHIMotionStateBiking: {
-                                baseBreath = baseBreath * 2.1;
-                                break;
-                            }
-                        }
-                        data.ventilation_rate = baseBreath;
-                        data.ventilation_vol = (baseBreath * timePass) / 60;
-                        data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                        
-                        NSLog(@"data is %@",data);
-                        [WHIGlobal sharedGlobal].pmData = data;
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
-                        [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
-                            if (success) {
-                                NSLog(@"有805设备号分支 insert success");
-                            }else{
-                                NSLog(@"insert failed");
-                            }
-                        }];
-                    }];
-                }];
-            }];
-        } else {
-            [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
-                    self.lastDate = nowDate;
-                    WHIData *data = [[WHIData alloc] init];
-                    if (succeed){
-                        if ((stepCount - _lastSteps) < 10000){
-                            data.steps = stepCount - _lastSteps;
-                        }
-                        _lastSteps = stepCount;
-                    }else{
-                        NSLog(@"获取步数失败");
-                    }
-                    
-                    data.user_id = [WHIUser currentUser].objectId ?: @"";;
-                    data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
-                    data.pm25_monitor = deviceId;
-                    data.APP_version = app_version;
-                    data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
-                    
-                    data.time_point = nowDate;
-                    data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
-                    if (result) {
-                        data.pm25_concen = [result.PM25 doubleValue];
-                        if (!data.outdoor) {
-                            data.pm25_concen = data.pm25_concen / 2;
-                        }
-                    }
-                    
-                    data.longitude = userLocation.coordinate.longitude;
-                    data.latitude = userLocation.coordinate.latitude;
-                    data.pm25_datasource = result.source;
-                    data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
-                    double weight = [WHIUserDefaults sharedDefaults].weight;
-                    double baseBreath = 7.8 * weight * 13 / 1000;
-                    switch (data.status) {
-                        case WHIMotionStateStationary: {
-                            break;
-                        }
-                        case WHIMotionStateWalk: {
-                            baseBreath = baseBreath * 2.1;
-                            break;
-                        }
-                        case WHIMotionStateRunning: {
-                            baseBreath = baseBreath * 6;
-                            break;
-                        }
-                        case WHIMotionStateBiking: {
-                            baseBreath = baseBreath * 2.1;
-                            break;
-                        }
-                    }
-                    data.ventilation_rate = baseBreath;
-                    data.ventilation_vol = (baseBreath * timePass) / 60;
-                    data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                    
-                    NSLog(@"data is %@",data);
-                    [WHIGlobal sharedGlobal].pmData = data;
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
-                    [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
-                        if (success) {
-                            NSLog(@"用户定位数据查询分支insert success");
-                        }else{
-                            NSLog(@"insert failed");
-                        }
-                    }];
-                }];
-            }];
-        }
-        
     }
 }
 
@@ -298,20 +119,6 @@
     UMConfigInstance.appKey = @"	577b2ca467e58e2274002414";
     UMConfigInstance.channelId = @"App Store";
     [Bugtags startWithAppKey:@"59656cb945c12c0419c217850fc63efe" invocationEvent:BTGInvocationEventNone];
-}
-
-- (NSString *)getWifiName{
-    NSString *wifiName = NULL;
-    CFArrayRef myArray = CNCopySupportedInterfaces();
-    if (myArray != nil) {
-        CFDictionaryRef myDict =CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-        if (myDict != nil) {
-            NSDictionary *dict = (NSDictionary*)CFBridgingRelease(myDict);
-            wifiName = [dict valueForKey:@"SSID"];
-        }
-//        NSLog(@"wifiName:%@", wifiName);
-    }
-    return wifiName;
 }
 
 - (void)getStepsByStartDate:(NSDate *)startDate andCurrentDate:(NSDate *)currentDate

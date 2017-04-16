@@ -38,7 +38,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelError;
 #define kWeekInterval 86400
 
 
-#define queryTimerDutaion 30                //查询间隔时间
+#define queryTimerDutaion 60                //查询间隔时间
 #define deviceExpireTime 3600               //805设备数据失效时间
 
 #endif /* WhiskyPrefixHeader_pch */
