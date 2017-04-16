@@ -39,15 +39,15 @@
         [self.healthStore requestAuthorizationToShareTypes:nil readTypes:readDataTypes completion:^(BOOL success, NSError * _Nullable error) {
             if (success)
             {
-                NSLog(@"获取步数权限成功");
+//                NSLog(@"获取步数权限成功");
             }
             else
             {
-                NSLog(@"获取步数权限失败");
+//                NSLog(@"获取步数权限失败");
             }
         }];
     }else{
-        NSLog(@"设备不支持healthKit");
+//        NSLog(@"设备不支持healthKit");
     }
 }
 

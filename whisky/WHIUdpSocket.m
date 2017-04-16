@@ -35,14 +35,14 @@ static WHIUdpSocket *manager = nil;
         NSError *bindError;
         if (![socket bindToPort:0 error:&bindError]) {
             self.deviceId = nil;
-            NSLog(@"Error binding: %@", bindError);
+//            NSLog(@"Error binding: %@", bindError);
         }
     }
     return self;
 }
 
 - (void)trySend {
-    NSLog(@"%d", socket.isConnected);
+//    NSLog(@"%d", socket.isConnected);
     NSError *error;
     [socket enableBroadcast:YES error:&error];
     NSData *data = [@"?ip" dataUsingEncoding:NSUTF8StringEncoding];
@@ -76,10 +76,10 @@ static WHIUdpSocket *manager = nil;
     NSDictionary *myDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:data];
     if ([myDictionary isKindOfClass:[NSDictionary class]]) {
         self.deviceId = myDictionary[@"sn"];
-        NSLog(@"got device id");
+//        NSLog(@"got device id");
     } else {
         self.deviceId = nil;
-        NSLog(@"didn't got device id");
+//        NSLog(@"didn't got device id");
     }
     return YES;
 }

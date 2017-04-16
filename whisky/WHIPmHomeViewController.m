@@ -189,7 +189,7 @@
                         lastRecordTime = [dateFormatter dateFromString:result.lastRecordTime];
                         if((!result.PM25) || ([nowDate timeIntervalSince1970] - [lastRecordTime timeIntervalSince1970]) >  deviceExpireTime){
                             //805设备号无效或者数据过期
-                            NSLog(@"805 is not usable");
+//                            NSLog(@"805 is not usable");
                             data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
                             if (locationResult) {
                                 data.pm25_concen = [locationResult.PM25 doubleValue];
@@ -211,7 +211,7 @@
                             }
                             _lastSteps = stepCount;
                         }else{
-                            NSLog(@"获取步数失败");
+//                            NSLog(@"获取步数失败");
                         }
                         
                         data.user_id = [WHIUser currentUser].objectId ?: @"";;
@@ -246,14 +246,14 @@
                         data.ventilation_vol = (baseBreath * timePass) / 60;
                         data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
                         
-                        NSLog(@"data is %@",data);
+//                        NSLog(@"data is %@",data);
                         [WHIGlobal sharedGlobal].pmData = data;
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                         [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
                             if (success) {
-                                NSLog(@"有805设备号分支 insert success");
+//                                NSLog(@"有805设备号分支 insert success");
                             }else{
-                                NSLog(@"insert failed");
+//                                NSLog(@"insert failed");
                             }
                         }];
                     }];
@@ -270,7 +270,7 @@
                         }
                         _lastSteps = stepCount;
                     }else{
-                        NSLog(@"获取步数失败");
+//                        NSLog(@"获取步数失败");
                     }
                     
                     data.user_id = [WHIUser currentUser].objectId ?: @"";;
@@ -315,14 +315,14 @@
                     data.ventilation_vol = (baseBreath * timePass) / 60;
                     data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
                     
-                    NSLog(@"data is %@",data);
+//                    NSLog(@"data is %@",data);
                     [WHIGlobal sharedGlobal].pmData = data;
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
                     [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
                         if (success) {
-                            NSLog(@"用户定位数据查询分支insert success");
+//                            NSLog(@"用户定位数据查询分支insert success");
                         }else{
-                            NSLog(@"insert failed");
+//                            NSLog(@"insert failed");
                         }
                     }];
                 }];
@@ -383,7 +383,7 @@
             notification.applicationIconBadgeNumber = 0;
             notification.alertAction = @"查看";
             [[UIApplication sharedApplication]scheduleLocalNotification:notification];
-            NSLog(@"notification 启动成功");
+//            NSLog(@"notification 启动成功");
         }
     }];
 }
@@ -875,7 +875,7 @@
 //            NSLog(@"result is %@", result);
             [WHIData upload:result complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"upload error");
+//                    NSLog(@"upload error");
                 } else {
                     for (WHIData *data in array) {
                         data.upload = YES;

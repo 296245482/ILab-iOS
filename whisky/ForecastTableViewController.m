@@ -65,7 +65,7 @@
                     indoorVenVol += data.ventilation_vol;
                 }
             }
-            NSLog(@"result size is %lu", (unsigned long)[result count]);
+//            NSLog(@"result size is %lu", (unsigned long)[result count]);
         }else{
             for (WHIData *data in result){
 //              NSLog(@"result is %f %f %d",[data.time_point timeIntervalSince1970], data.ventilation_vol,data.outdoor);

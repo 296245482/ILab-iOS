@@ -118,7 +118,7 @@ static WHIDatabaseManager *manager = nil;
         NSString *sql = @"insert into PMData (user_id, database_access_token, time_point, longitude, latitude, outdoor, status, steps, heart_rate, ventilation_rate, ventilation_vol, pm25_concen, pm25_intake, pm25_datasource,pm25_monitor,APP_version,  upload, connection) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         BOOL success = [db executeUpdate:sql, (data.user_id),(data.database_access_token), @([data.time_point timeIntervalSince1970]), @(data.longitude), @(data.latitude), @(data.outdoor), @(data.status), @(data.steps), @(data.heart_rate), @(data.ventilation_rate), @(data.ventilation_vol), @(data.pm25_concen), @(data.pm25_intake), @(data.pm25_datasource), (data.pm25_monitor), (data.APP_version), @(NO), @(data.connection)];
         if (!success) {
-            NSLog(@"插入失败");
+//            NSLog(@"插入失败");
             *rollback = YES;
             dispatch_async(dispatch_get_main_queue(), ^{
                 complete(NO);
@@ -142,7 +142,7 @@ static WHIDatabaseManager *manager = nil;
        NSString *sql = @"insert into DeviceWifi (device_id, wifi) values (?, ?)";
         BOOL success = [db executeUpdate:sql, (deviceWifi.deviceId), (deviceWifi.wifiName)];
         if(!success){
-            NSLog(@"插入失败");
+//            NSLog(@"插入失败");
             *rollback = YES;
             dispatch_async(dispatch_get_main_queue(), ^{
                 complete(NO);
@@ -162,7 +162,7 @@ static WHIDatabaseManager *manager = nil;
         if (!success) {
             *rollback = YES;
         }else{
-            NSLog(@"删除成功");
+//            NSLog(@"删除成功");
         }
     }];
 }
@@ -340,7 +340,7 @@ static WHIDatabaseManager *manager = nil;
         NSMutableArray *result = [NSMutableArray array];
         NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PMData where upload = ? or upload is null ORDER BY time_point DESC LIMIT %d", limit];
         FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
-        NSLog(@"query for unupload");
+//        NSLog(@"query for unupload");
         while ([queryResult next]) {
             WHIData *data = [[WHIData alloc] init];
             double timePoint = [queryResult doubleForColumn:@"time_point"];

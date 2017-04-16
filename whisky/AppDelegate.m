@@ -125,7 +125,7 @@
 {
     [[WHIHealthKit sharedHealthKit] queryStepCount:startDate endDate:currentDate complete:^(double stepCount, BOOL succeed){
         if (succeed){
-            NSLog(@" steps is %f",stepCount);
+//            NSLog(@" steps is %f",stepCount);
         }
     }];
 }

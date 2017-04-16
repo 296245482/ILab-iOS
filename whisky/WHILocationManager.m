@@ -43,7 +43,7 @@
         if (!res) {
             DDLogDebug(@"manager start failed!");
         }else{
-            NSLog(@"tried location started");
+//            NSLog(@"tried location started");
         }
         self.geocodesearch = [[BMKGeoCodeSearch alloc] init];
         self.geocodesearch.delegate = self;

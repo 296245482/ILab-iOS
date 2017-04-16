@@ -74,7 +74,7 @@
         complete(nil, nil);
         return;
     }
-    NSLog(@"post result is %@",result);
+//    NSLog(@"post result is %@",result);
     NSMutableArray *arrayData = [NSMutableArray array];
     for (WHIData *data in result) {
         if (data.upload == NO) {
@@ -85,7 +85,7 @@
     NSString *access_token = [WHIUserDefaults sharedDefaults].token;
     NSDictionary *paras = @{@"access_token": access_token ?: @"",
                             @"data": arrayData};
-    NSLog(@"token is %@",paras);
+//    NSLog(@"token is %@",paras);
     [[WHIClient sharedClient] post:@"new-mobile-data/upload" parameters:paras complete:^(id successResult, NSError * _Nullable error) {
         complete(result, error);
     }];
@@ -111,7 +111,7 @@
     NSString *access_token = oldToken;
     NSDictionary *paras = @{@"access_token": access_token ?: @"",
                             @"data": arrayData};
-    NSLog(@"token is %@",paras);
+//    NSLog(@"token is %@",paras);
     [[WHIClient sharedClient] post:@"new-mobile-data/upload" parameters:paras complete:^(id successResult, NSError * _Nullable error) {
         complete(result, error);
     }];

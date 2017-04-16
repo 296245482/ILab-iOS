@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"进入device table view");
+//    NSLog(@"进入device table view");
     self.devices = [[NSMutableArray alloc]init];
 //    DeviceWifi *object = [[DeviceWifi alloc]initWithDevice:@"ggg" initWithWifi:@"sasa"];
     
@@ -183,7 +183,7 @@
         if(![newObject.deviceId isEqualToString:@""] && ![newObject.wifiName isEqualToString:@""])
         [[WHIDatabaseManager sharedManager] insertDevice:newObject complete:^(BOOL success){
             if(success){
-                NSLog(@"成功插入一条device");
+//                NSLog(@"成功插入一条device");
             }
         }];
     }];

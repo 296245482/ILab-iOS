@@ -99,17 +99,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSLog(@"连接设备中...");
+//    NSLog(@"连接设备中...");
     
     [self.bluetooth connectionWithDeviceUUID:[((CBPeripheral *)self.devices[indexPath.row]).identifier UUIDString] TimeOut:10 CompleteBlock:^(CBPeripheral *device, NSError *err) {
         if (device) {
-            NSLog(@"查找设备的服务和特征...");
+//            NSLog(@"查找设备的服务和特征...");
             [self.bluetooth discoverServiceAndCharacteristicWithInterval:3 CompleteBlock:^(NSArray *serviceArray, NSArray *characteristicArray, NSError *err) {
                 
-                NSLog(@"查找服务和特征成功 %ld",serviceArray.count);
+//                NSLog(@"查找服务和特征成功 %ld(unsigned long)",serviceArray.count);
             }];
         } else{
-            NSLog(@"连接设备失败");
+//            NSLog(@"连接设备失败");
         }
         [self.tableView reloadData];
     }];

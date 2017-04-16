@@ -129,9 +129,9 @@
 //            NSLog(@"user id is %@",uid);
             [WHIData uploadRemains:result logOutUserId:logOutUser token:oldToken complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"upload failed");
+//                    NSLog(@"upload failed");
                 } else {
-                    NSLog(@"upload succeed");
+//                    NSLog(@"upload succeed");
                     for (WHIData *data in array) {
                         data.upload = YES;
                     }
