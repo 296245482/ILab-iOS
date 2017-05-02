@@ -20,11 +20,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentCity;
 @property (weak, nonatomic) IBOutlet UILabel *tomorrowWheather;
 @property (weak, nonatomic) IBOutlet UILabel *tomorrowAirQuaility;
+@property (weak, nonatomic) IBOutlet UILabel *tomorrowPM;
 @property (weak, nonatomic) IBOutlet UILabel *outsideTime;
 @property (weak, nonatomic) IBOutlet UILabel *insideTime;
 @property (weak, nonatomic) IBOutlet UILabel *outsideVol;
 @property (weak, nonatomic) IBOutlet UILabel *insideVol;
 @property (weak, nonatomic) IBOutlet UILabel *forecastIntake;
+@property (weak, nonatomic) IBOutlet UILabel *weatherLabel;
+@property (weak, nonatomic) IBOutlet UILabel *AQILabel;
+@property (weak, nonatomic) IBOutlet UILabel *PMLabel;
+@property (weak, nonatomic) IBOutlet UILabel *PMBreathLabel;
 
 @end
 
@@ -35,7 +40,6 @@
     //[self updateCity];
     [self getAQI];
     [self getLastWeekDetail];
-    self.outsideTime.text = @"小时";
 }
 
 - (void)updateCity{
@@ -50,21 +54,22 @@
     self.currentCity.text = [city substringToIndex:([city length]-1)];
 }
 
-//TODO
 - (void)getLastWeekDetail{
     [[WHIDatabaseManager sharedManager] searchLastWeekData:[NSDate date] complete:^(NSArray *result){
         float outdoorVenVol=0.0,indoorVenVol=0.0;
         float indoorTime=0.0, outdoorTime=0.0, lastRecordtime = 0.0;
-        if([result count] < 1100){
+        if([result count] < 1000){
             indoorTime = 3;
             outdoorTime = 21;
-            for (WHIData *data in result){
-                if(data.outdoor == 1){
-                    outdoorVenVol += data.ventilation_vol;
-                }else{
-                    indoorVenVol += data.ventilation_vol;
-                }
-            }
+            indoorVenVol = 1186.38;
+            outdoorVenVol = 8304.66;
+//            for (WHIData *data in result){
+//                if(data.outdoor == 1){
+//                    outdoorVenVol += data.ventilation_vol;
+//                }else{
+//                    indoorVenVol += data.ventilation_vol;
+//                }
+//            }
 //            NSLog(@"result size is %lu", (unsigned long)[result count]);
         }else{
             for (WHIData *data in result){
@@ -94,8 +99,8 @@
         }
         
         //ventilation_vol
-        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86.4*outdoorVenVol/(outdoorTime+indoorTime))];
-        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86.4*indoorVenVol/(outdoorTime+indoorTime))];
+        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*outdoorVenVol/(outdoorTime+indoorTime))];
+        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*indoorVenVol/(outdoorTime+indoorTime))];
         
         //in/out door time
         self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
@@ -117,6 +122,12 @@
                 self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
                 self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
                 self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
+                self.tomorrowPM.text = [NSString stringWithFormat:@"%@微克/m³",result.PM25];
+                NSString *dateTime = [result.Date substringFromIndex:([result.Date length]-5)];
+                self.weatherLabel.text = [NSString stringWithFormat:@"%@日温度", dateTime];
+                self.AQILabel.text = [NSString stringWithFormat:@"%@日AQI预测值", dateTime];
+                self.PMLabel.text = [NSString stringWithFormat:@"%@日PM25预测值", dateTime];
+                self.PMBreathLabel.text = [NSString stringWithFormat:@"%@日预计PM25吸入量", dateTime];
             }
         }];
     }];

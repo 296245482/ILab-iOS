@@ -109,6 +109,7 @@
             predictData.PM25 = @"Error";
             predictData.HTEMP = @"Error";
             predictData.LTEMP = @"Error";
+            predictData.Date = @"Error";
             complete(predictData, nil);
         }else{
             forecastAirData *predictData = [[forecastAirData alloc]init];
@@ -116,6 +117,7 @@
             predictData.PM25 = [NSString stringWithFormat: @"%ld", (long)[result[@"PM25"] integerValue]];
             predictData.HTEMP = [NSString stringWithFormat: @"%ld", (long)[result[@"HTEMP"] integerValue]];
             predictData.LTEMP = [NSString stringWithFormat: @"%ld", (long)[result[@"LTEMP"] integerValue]];
+            predictData.Date = [NSString stringWithFormat:@"%@", result[@"date"]];
             complete(predictData, nil);
         }
     }];

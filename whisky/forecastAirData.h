@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *PM25;
 @property (nonatomic, strong) NSString *HTEMP;
 @property (nonatomic, strong) NSString *LTEMP;
+@property (nonatomic, strong) NSString *Date;
 
 @end
 
