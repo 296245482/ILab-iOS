@@ -229,6 +229,40 @@ static WHIDatabaseManager *manager = nil;
     }];
 }
 
+- (void)getTodayAccuData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete {
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSInteger timerCount = [date timeIntervalSinceDate:[date dateToday]];
+        NSMutableArray *pmResult = [NSMutableArray array];
+        NSMutableArray *breathResult = [NSMutableArray array];
+        for (int i = 0; i < timerCount / kToDayInterval; i++) {
+            NSDate *startDate = [NSDate dateWithTimeInterval:i * kToDayInterval sinceDate:[date dateToday]];
+            NSDate *endDate = [NSDate dateWithTimeInterval:(i + 1) * kToDayInterval sinceDate:[date dateToday]];
+            NSString *sql = [NSString stringWithFormat:@"SELECT pm25_concen, ventilation_vol FROM PMData where %f < time_point and time_point <= %f", [startDate timeIntervalSince1970], [endDate timeIntervalSince1970]];
+            FMResultSet *queryResult = [db executeQuery:sql];
+            float sum = 0;
+            float breathSum = 0;
+            NSInteger count = 0;
+            while ([queryResult next]) {
+                float timePointPM = [queryResult doubleForColumn:@"pm25_concen"];
+                float breathSumPoint = [queryResult doubleForColumn:@"ventilation_vol"];
+                count = count + 1;
+                sum = sum + timePointPM;
+                breathSum = breathSum + breathSumPoint;
+            }
+            if (count != 0) {
+                sum = sum / count;
+            }
+            //            DDLogDebug(@"Query Today PMStart: %@ End: %@, pm25_concen: %f", [startDate whi_dateWithFormat:@"HH:mm:ss"], [endDate whi_dateWithFormat:@"HH:mm:ss"], sum);
+            [pmResult addObject:@(sum)];
+            [breathResult addObject:@(breathSum)];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(breathResult, pmResult);
+        });
+        
+    }];
+}
+
 - (void)getTwoHourData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete {
     [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         NSInteger timerCount = [date timeIntervalSinceDate:[date dateByAddingHour:-2]];

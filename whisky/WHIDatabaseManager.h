@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)insertData:(WHIData *)data complete:(void (^) (BOOL success))complete;
 - (void)getTodayData:(NSDate *)date complete:(void (^)(NSArray *breath, NSArray *pm25_concen))complete;
+- (void)getTodayAccuData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete;
 - (void)getTwoHourData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete;
 - (void)getHourData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull))complete;
 

@@ -102,6 +102,8 @@
 @property (nonatomic, strong) NSArray *dayBreathData;
 @property (nonatomic, strong) NSArray *dayPMData;
 
+@property (nonatomic, strong) NSArray *dayBreathAccumuData;
+
 @property (nonatomic, strong) NSArray *weekPmBreath;
 @property (nonatomic, strong) NSArray *weekBreath;
 
@@ -549,6 +551,16 @@
         [self updateTodayTotalBreathPMData];
     }];
     
+    [[WHIDatabaseManager sharedManager] getTodayAccuData:self.nowDate complete:^(NSArray * _Nonnull breath, NSArray * _Nonnull pm) {
+        self.dayPMData = pm;
+        self.dayBreathAccumuData = breath;
+        [self updateTodayTotalBreathData];
+        [self updateTodayBreathData];
+        [self updateTodayPMData];
+        [self updateTodayBreathPMData];
+        [self updateTodayTotalBreathPMData];
+    }];
+    
     [self updateOneHourPMBreath];
     
     [self updateWeek:^(NSArray *breath, NSArray *pmBreath) {
@@ -578,11 +590,11 @@
                 endDate = self.nowDate;
             }
            
-            [[WHIDatabaseManager sharedManager] getTodayData:endDate complete:^(NSArray * _Nonnull breath, NSArray * _Nonnull pm) {
+            [[WHIDatabaseManager sharedManager] getTodayAccuData:endDate complete:^(NSArray * _Nonnull breath, NSArray * _Nonnull pm) {
                 double value = 0;
                 double breahValue = 0;
                 for (int j = 0; j < MIN(breath.count, pm.count); j++) {
-                    value = value + [breath[j] doubleValue] * [pm[j] doubleValue] / 1000 * kToDayInterval / 60;
+                    value = value + [breath[j] doubleValue] * [pm[j] doubleValue] / 1000;// * kToDayInterval / 60;
                     breahValue = breahValue + [breath[j] doubleValue];
                 }
                 [pmBreathResult replaceObjectAtIndex:i withObject:@(value)];
@@ -611,8 +623,8 @@
 
 - (void)updateTodayTotalBreathData {
     NSMutableArray *totalBreath = [NSMutableArray array];
-    for (int i = 0; i < self.dayBreathData.count; i++) {
-        double value = [self.dayBreathData[i] doubleValue];
+    for (int i = 0; i < self.dayBreathAccumuData.count; i++) {
+        double value = [self.dayBreathAccumuData[i] doubleValue];
         if (i > 0) {
             value = value + [totalBreath[i - 1] doubleValue];
             [totalBreath addObject:@(value)];
