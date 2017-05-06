@@ -21,7 +21,7 @@ static NSString *const WHIUserChangeNotification = @"WHIUserChanageNotification"
 
 + (void)setUser:(nullable WHIUser *)user;
 
-- (void)registerUser:(BoolCompleteBlock)complete;
+- (void)registerUser:(NSString *)name password:(NSString *)password complete:(BoolCompleteBlock)complete;
 
 + (void)login:(NSString *)name password:(NSString *)password complete:(UserCompleteBlock)complete;
 + (void)logOut;

@@ -62,7 +62,8 @@
     user.code = self.inviteTextField.text;
     
     [self.confirmButton showIndicator];
-    [user registerUser:^(BOOL success, NSError * _Nullable error) {
+    [user registerUser:name password:password complete:^(BOOL success, NSError * _Nullable error){
+
         [self.confirmButton hideIndicator];
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];

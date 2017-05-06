@@ -8,6 +8,7 @@
 
 #import "WHIUser+Manager.h"
 #import "WHIUserDefaults.h"
+#import "customKeyChainTool.h"
 
 @implementation WHIUser (Manager)
 
@@ -53,7 +54,7 @@ static NSString *__token;
     return dic;
 }
 
-- (void)registerUser:(BoolCompleteBlock)complete {
+- (void)registerUser:(NSString *)name password:(NSString *)password complete:(BoolCompleteBlock)complete {
 
     [[WHIClient sharedClient] post:@"users/logon" parameters:[self toParams] complete:^(id _Nullable result, NSError * _Nullable error) {
         if (result) {
@@ -62,9 +63,19 @@ static NSString *__token;
                 NSError *aError = [NSError errorWithDomain:@"ilab.tongji.edu.cn.pm" code:[result[@"status"] integerValue] userInfo:userInfo];
                 complete(NO, aError);
             } else {
+                [WHIUser login:name password:password complete:^(WHIUser * _Nullable user, NSError * _Nullable error) {
+                    if (error) {
+                        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+                    } else {
+                        [WHIUserDefaults sharedDefaults].autoUpload = 1;
+                        
+                        NSMutableDictionary *userNamePasswdPair = [NSMutableDictionary dictionary];
+                        [userNamePasswdPair setObject:name forKey:@"name"];
+                        [userNamePasswdPair setObject:password forKey:@"password"];
+                        [customKeyChainTool save:@"namePasswdPair" data:userNamePasswdPair];
+                    }
+                }];
                 self.objectId = result[@"userid"];
-                [WHIUser setToken:result[@"access_token"]];
-                [WHIUser setUser:self];
                 complete(YES, nil);
             }
         } else {
