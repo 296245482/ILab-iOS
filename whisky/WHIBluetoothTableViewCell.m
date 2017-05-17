@@ -32,7 +32,7 @@
             break;
         }
         case CBPeripheralStateConnected: {
-            self.stateLabel.text = @"已连接";
+            self.stateLabel.text = @"Connected";
             [self.activityView stopAnimating];
             break;
         }

@@ -12,15 +12,15 @@
 @implementation UIAlertController (WeightController)
 
 + (instancetype)whi_showWeightAlertController {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"请输入体重(kg)", @"LocalizedString", nil)  message:NSLocalizedStringFromTable(@"应用需要您的体重计算呼吸情况", @"LocalizedString", nil) preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"Please enter your weight(kg)", @"LocalizedString", nil)  message:NSLocalizedStringFromTable(@"used for personal ventilation calculation", @"LocalizedString", nil) preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"完成", @"LocalizedString", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"OK", @"LocalizedString", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [WHIUserDefaults sharedDefaults].weight = [alertController.textFields[0].text floatValue];
     }];
   
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = NSLocalizedStringFromTable(@"体重(kg)", @"LocalizedString", nil);
+        textField.placeholder = NSLocalizedStringFromTable(@"weight(kg)", @"LocalizedString", nil);
         textField.keyboardType = UIKeyboardTypeDecimalPad;
         
         if ([WHIUserDefaults sharedDefaults].weight == 0) {

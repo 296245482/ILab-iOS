@@ -102,7 +102,7 @@
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return @"删除";
+    return @"delete";
 }
 
 
@@ -131,7 +131,7 @@
 */
 - (IBAction)addDevice:(id)sender {
     [self clearData];
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入Wi-Fi名和设备号"
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"please enter Wi-Fi-device pair"
                                                                              message:@""
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
@@ -143,18 +143,18 @@
         textField.placeholder = NSLocalizedString(@"Enter WiFi Name", @"WifiName");
         textField.text = wifiName;
     }];
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
         UITextField *empDevice = alertController.textFields[0];
         UITextField *empWifi = alertController.textFields[1];
         deviceId = empDevice.text;
         wifiName = empWifi.text;
         
         if([deviceId isEqualToString:@""]){
-            errorMessage = @"请输入设备号";
-            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"错误"
+            errorMessage = @"no device ID";
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"error"
                                                                            message:errorMessage
                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                 [self addDevice:sender];
                 [self.devices removeLastObject];
                 [self.deviceTableView reloadData];
@@ -163,11 +163,11 @@
             [self presentViewController:alert animated:YES completion:nil];
         }
         if ([wifiName isEqualToString:@""]) {
-            errorMessage = @"请输入Wi-Fi名";
-            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"错误"
+            errorMessage = @"no Wi-Fi SSID";
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"error"
                                                                            message:errorMessage
                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                 [self addDevice:sender];
                 [self.devices removeLastObject];
                 [self.deviceTableView reloadData];
@@ -188,7 +188,7 @@
         }];
     }];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", @"Cancel action")
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action")
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction *action){
                                                          }];

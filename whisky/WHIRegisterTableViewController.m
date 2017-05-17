@@ -30,24 +30,24 @@
 - (IBAction)confirmButtonTouchUpInSide:(WHIActivityIndicatorButton *)sender {
     NSString *password = self.passwordTextField.text;
     if (password == nil || [password isEqualToString:@""]) {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"密码不能为空", @"LocalizedString", nil)];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"password!", @"LocalizedString", nil)];
         return;
     }
     
     NSString *name = self.nickNameTextField.text;
     if (name == nil || [name isEqualToString:@""]) {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"用户名不能为空", @"LocalizedString", nil)];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"user name!", @"LocalizedString", nil)];
         return;
     }
     
     NSString *email = self.mailTextField.text;
     if (email == nil || [email isEqualToString:@""]) {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"邮箱不能为空", @"LocalizedString", nil)];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"email!", @"LocalizedString", nil)];
         return;
     }
     
     if (![password isEqualToString:self.confirmPasswordTextField.text]) {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"两次密码不一致", @"LocalizedString", nil)];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedStringFromTable(@"different password", @"LocalizedString", nil)];
         return;
     }
     
@@ -68,7 +68,7 @@
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         } else {
-            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"注册成功", @"LocalizedString", nil)];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"Succeed", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];

@@ -39,7 +39,7 @@
 
 - (IBAction)forgetPasswordButtonTouchUpInside:(UIButton *)sender {
     if (self.nameTextField.text == nil || [self.nameTextField.text isEqualToString:@""]) {
-        [SVProgressHUD showErrorWithStatus:@"用户名为空"];
+        [SVProgressHUD showErrorWithStatus:@"user name needed"];
         return;
     }
     
@@ -47,8 +47,8 @@
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         } else {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"找回密码" message:@"找回密码连接已发送至你注册的邮箱，请查收"preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Forget password" message:@"Please check you email"preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 
             }]];
             [self presentViewController:alert animated:YES completion:nil];

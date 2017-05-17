@@ -34,7 +34,7 @@
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         } else {
-            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"登录成功", @"LocalizedString", nil)];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"Loged In", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
             
             [WHIUserDefaults sharedDefaults].autoUpload = 1;

@@ -292,7 +292,7 @@
                     
                     data.longitude = userLocation.coordinate.longitude;
                     data.latitude = userLocation.coordinate.latitude;
-                    data.pm25_datasource = result.source;
+                    data.pm25_datasource = 1;
                     data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
                     double weight = [WHIUserDefaults sharedDefaults].weight;
                     double baseBreath = 7.8 * weight * 13 / 1000;
@@ -355,7 +355,7 @@
     } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
         city = [WHIUserDefaults sharedDefaults].addressDetail.province;
     } else {
-        city = @"未知城市";
+        city = @"unknow city";
     }
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
@@ -374,16 +374,16 @@
             notification.timeZone= [NSTimeZone defaultTimeZone];
             //设置提示消息
             if ([UIDevice currentDevice].systemVersion.floatValue >= 8.2) {
-                notification.alertTitle = @"明日空气质量提醒";
+                notification.alertTitle = @"Tomorrow AQI Worning";
             }
-            notification.alertBody = [NSString stringWithFormat:@"明日AQI为:%@    PM25为:%@",result.AQI, result.PM25];
+            notification.alertBody = [NSString stringWithFormat:@"Tomorrow AQI:%@    PM25:%@",result.AQI, result.PM25];
             // 设置启动通知的声音
             notification.soundName = UILocalNotificationDefaultSoundName;
             // 启动通知
             notification.hasAction = YES;
             notification.alertLaunchImage = @"111";
             notification.applicationIconBadgeNumber = 0;
-            notification.alertAction = @"查看";
+            notification.alertAction = @"check it";
             [[UIApplication sharedApplication]scheduleLocalNotification:notification];
 //            NSLog(@"notification 启动成功");
         }
@@ -411,33 +411,33 @@
         }
 
         if (outDoorPm < 50) {
-            self.airLabel.text = @"空气质量优";
-            self.healthLabel.text = @"适合户外活动";
+            self.airLabel.text = @"Exellent";
+            self.healthLabel.text = @"Suitabe";
             self.airLabel.textColor = [UIColor greenColor];
             self.healthLabel.textColor = [UIColor greenColor];
         } else if (outDoorPm < 100) {
-            self.airLabel.text = @"空气质量良";
-            self.healthLabel.text = @"易感人群减少户外活动";
+            self.airLabel.text = @"Good";
+            self.healthLabel.text = @"Avoid For Sensitive Pop";
             self.airLabel.textColor = [UIColor yellowColor];
             self.healthLabel.textColor = [UIColor yellowColor];
         } else if (outDoorPm < 150) {
-            self.airLabel.text = @"轻度污染";
-            self.healthLabel.text = @"适量减少户外活动";
+            self.airLabel.text = @"Moderate Pollution";
+            self.healthLabel.text = @"Reduce";
             self.airLabel.textColor = [UIColor orangeColor];
             self.healthLabel.textColor = [UIColor orangeColor];
         } else if (outDoorPm < 200) {
-            self.airLabel.text = @"中度污染";
-            self.healthLabel.text = @"避免户外活动";
+            self.airLabel.text = @"High Pollution";
+            self.healthLabel.text = @"Avoid";
             self.airLabel.textColor = [UIColor redColor];
             self.healthLabel.textColor = [UIColor whi_colorWithHex:0x8B572A];
         } else if (outDoorPm < 250) {
-            self.airLabel.text = @"重度污染";
-            self.healthLabel.text = @"避免户外活动";
+            self.airLabel.text = @"Severe Pollution";
+            self.healthLabel.text = @"Avoid";
             self.airLabel.textColor = [UIColor whi_colorWithHex:0x8B572A];
             self.healthLabel.textColor = [UIColor whi_colorWithHex:0x8B572A];
         } else {
-            self.airLabel.text = @"严重污染";
-            self.healthLabel.text = @"避免户外活动";
+            self.airLabel.text = @"Extrame Pollution";
+            self.healthLabel.text = @"Avoid";
             self.airLabel.textColor = [UIColor blackColor];
             self.healthLabel.textColor = [UIColor whi_colorWithHex:0x8B572A];
         }
@@ -450,7 +450,7 @@
     } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
         self.navigationItem.title = [WHIUserDefaults sharedDefaults].addressDetail.province;
     } else {
-        self.navigationItem.title = @"未知城市";
+        self.navigationItem.title = @"unknow location";
     }
 }
 
@@ -529,7 +529,7 @@
 }
 
 - (void)updateAll {
-    self.navigationItem.prompt = @"刷新中";
+    self.navigationItem.prompt = @"Loading";
     [self updateCity];
     
     self.nowDate = [NSDate date];
@@ -567,7 +567,7 @@
         self.weekBreath = breath;
         self.weekPmBreath = pmBreath;
         [self updateWeekChart];
-        self.navigationItem.prompt = @"生态 健康 生活";
+        self.navigationItem.prompt = @"Ecology Health Life";
     }];
 }
 
@@ -617,7 +617,7 @@
         for (int i = 0; i < MIN(breath.count, pm.count); i++) {
             value = value + [breath[i] doubleValue] * [pm[i] doubleValue] / 1000 * kHourInterval / 60;
         }
-        self.oneHourPMBreathLabel.text = [NSString stringWithFormat:@"%.1f 微克", value];
+        self.oneHourPMBreathLabel.text = [NSString stringWithFormat:@"%.1f µg", value];
     }];
 }
 
@@ -692,7 +692,7 @@
     LineChartDataSet *set = [self convertToLineChart:pmBreath];
     self.todayTotalPMBreathLineChartView.data = [[LineChartData alloc] initWithXVals:[self dayAxis] dataSets:@[set]];
     if (pmBreath.lastObject) {
-        self.todayTotalPMBreathLabel.text = [NSString stringWithFormat:@"%.1f 微克", [[pmBreath lastObject] doubleValue]];
+        self.todayTotalPMBreathLabel.text = [NSString stringWithFormat:@"%.1f µg", [[pmBreath lastObject] doubleValue]];
     }
 }
 
@@ -714,7 +714,7 @@
         average = average / count;
     }
     
-    self.weekPMBreathLabel.text = [NSString stringWithFormat:@"%.1f 微克", average];
+    self.weekPMBreathLabel.text = [NSString stringWithFormat:@"%.1f µg", average];
     BarChartDataSet *set = [self convertToBarChart:self.weekPmBreath];
     self.weekPMBreathBarChartView.data = [[BarChartData alloc] initWithXVals:[self weekAxis] dataSets:@[set]];
 }

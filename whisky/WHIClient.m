@@ -84,11 +84,11 @@ static WHIClient *_sharedClient;
         [self.httpClient.requestSerializer setValue:[self.tokenConfigDelegate clientToken:self] forHTTPHeaderField:@"token"];
     }
     
-    [self.httpClient GET:path parameters:requestParams success:^(NSURLSessionTask *task, id response) {
+    [self.httpClient GET:@"http://106.14.63.93:8080/search" parameters:requestParams success:^(NSURLSessionTask *task, id response) {
         dispatch_async(dispatch_get_main_queue(), ^() {
             complete(response, nil);
         });
- 
+        
     } failure:^(NSURLSessionTask *task, NSError *error) {
         DDLogError(@"%@", error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^() {

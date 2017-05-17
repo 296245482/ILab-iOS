@@ -49,7 +49,7 @@
     } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
         city = [WHIUserDefaults sharedDefaults].addressDetail.province;
     } else {
-        city = @"未知城市";
+        city = @"Unknow";
     }
     self.currentCity.text = [city substringToIndex:([city length]-1)];
 }
@@ -99,8 +99,8 @@
         }
         
         //ventilation_vol
-        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*outdoorVenVol/(outdoorTime+indoorTime))];
-        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*indoorVenVol/(outdoorTime+indoorTime))];
+        self.outsideVol.text = [NSString stringWithFormat:@"%.2fL", (86400*outdoorVenVol/(outdoorTime+indoorTime))];
+        self.insideVol.text = [NSString stringWithFormat:@"%.2fL", (86400*indoorVenVol/(outdoorTime+indoorTime))];
         
         //in/out door time
         self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
@@ -113,21 +113,21 @@
         } else if ([WHIUserDefaults sharedDefaults].addressDetail.province) {
             city = [WHIUserDefaults sharedDefaults].addressDetail.province;
         } else {
-            city = @"未知城市";
+            city = @"unknow";
         }
         self.currentCity.text = [city substringToIndex:([city length]-1)];
         
         [WHIPMData getForecastData:[city substringToIndex:([city length]-1)] complete:^(forecastAirData *result, NSError *_Nullable error){
             if(result){
-                self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
+                self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@ºC",result.LTEMP,result.HTEMP];
                 self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
-                self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
-                self.tomorrowPM.text = [NSString stringWithFormat:@"%@微克/m³",result.PM25];
+                self.forecastIntake.text = [NSString stringWithFormat:@"%.2fµg", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
+                self.tomorrowPM.text = [NSString stringWithFormat:@"%@µg/m³",result.PM25];
                 NSString *dateTime = [result.Date substringFromIndex:([result.Date length]-5)];
-                self.weatherLabel.text = [NSString stringWithFormat:@"%@日温度", dateTime];
-                self.AQILabel.text = [NSString stringWithFormat:@"%@日AQI预测值", dateTime];
-                self.PMLabel.text = [NSString stringWithFormat:@"%@日PM25预测值", dateTime];
-                self.PMBreathLabel.text = [NSString stringWithFormat:@"%@日预计PM25吸入量", dateTime];
+                self.weatherLabel.text = [NSString stringWithFormat:@"%@Temp", dateTime];
+                self.AQILabel.text = [NSString stringWithFormat:@"%@AQI", dateTime];
+                self.PMLabel.text = [NSString stringWithFormat:@"%@PM25", dateTime];
+                self.PMBreathLabel.text = [NSString stringWithFormat:@"%@PM25 intake forecast", dateTime];
             }
         }];
     }];

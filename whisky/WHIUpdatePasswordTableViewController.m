@@ -42,14 +42,14 @@
     NSString *password = self.passwordTextField.text ?: @"";
     
     if ([old isEqualToString:@""]) {
-        UIAlertController *alert = [UIAlertController whi_alertControllerWithAlertMessage: NSLocalizedStringFromTable(@"原密码为空", @"LocalizedString", nil)];
+        UIAlertController *alert = [UIAlertController whi_alertControllerWithAlertMessage: NSLocalizedStringFromTable(@"Old one needed", @"LocalizedString", nil)];
         [self presentViewController:alert animated:YES completion:nil];
         return;
        
     }
     
     if ([password isEqualToString:@""]) {
-        UIAlertController *alert = [UIAlertController whi_alertControllerWithAlertMessage: NSLocalizedStringFromTable(@"新密码为空", @"LocalizedString", nil)];
+        UIAlertController *alert = [UIAlertController whi_alertControllerWithAlertMessage: NSLocalizedStringFromTable(@"plz enter new password", @"LocalizedString", nil)];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
@@ -59,7 +59,7 @@
         if (error) {
             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         } else {
-            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"密码修改成功", @"LocalizedString", nil)];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedStringFromTable(@"changed succeed", @"LocalizedString", nil)];
             [self.navigationController popViewControllerAnimated:YES];
             //[WHIUser logOut];
         }

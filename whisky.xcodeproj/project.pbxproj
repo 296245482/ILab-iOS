@@ -1126,7 +1126,7 @@
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/SinaSSO",
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/TencentOpenAPI",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn;
+				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.us;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "whisky/whisky-Bridging-Header.h";
@@ -1163,7 +1163,7 @@
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/SinaSSO",
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/TencentOpenAPI",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn;
+				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.us;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "whisky/whisky-Bridging-Header.h";
@@ -1291,7 +1291,7 @@
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/SinaSSO",
 					"$(PROJECT_DIR)/UMSocial_Sdk_5.2.1/TencentOpenAPI",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.cn;
+				PRODUCT_BUNDLE_IDENTIFIER = ilab.tongji.edu.us;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "whisky/whisky-Bridging-Header.h";

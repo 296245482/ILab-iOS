@@ -62,11 +62,17 @@
     //    NSString *access_token = @"asdasdasda";
     //NSLog(@"token here is %@",access_token);
     NSString *uid = [WHIUser currentUser].objectId ?:@"";
-    
-    NSDictionary *params = @{@"longitude": @(location.longitude),
-                             @"latitude": @(location.latitude),
-                             @"access_token": access_token ?: @""};
+    NSDictionary *params;
+    if(access_token){
+        params = @{@"longitude": @(location.longitude),
+                   @"latitude": @(location.latitude),
+                   @"token": access_token ?: @""};
+    }else{
+        params = @{@"longitude": @(location.longitude),
+                   @"latitude": @(location.latitude)};
+    }
     [[WHIClient sharedClient] get:@"urban-airs/search" parameters:params complete:^(id  _Nullable result, NSError * _Nullable error) {
+        NSLog(@"get result is %@",result);
         if (error) {
             WHIPMData *pmData = [[WHIPMData alloc] init];
             pmData.AQI = @(0);
@@ -74,14 +80,14 @@
             complete(pmData, nil);
         } else {
             WHIPMData *pmData;
-            NSInteger token_status = [result[@"token_status"] integerValue];
-            //NSLog(@"token_status is %ld", (long)token_status);
+            
+            NSInteger token_status = [result[@"token"] integerValue];
+            NSLog(@"token_status is %ld", (long)token_status);
             if (token_status == 2){
                 NSDate *lastLogin = result[@"last_login"];
                 
                 [self uploadRemainedData:lastLogin userid:uid token:access_token];
                 
-                [self logoutByOthers];
                 [WHIUser logOut];
                 //                NSLog(@"token here is %@",access_token);
             }else{
