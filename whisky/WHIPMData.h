@@ -10,18 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, WHIPMSource) {
-    WHIPMSourceUnkonw = 0,
-    WHIPMSourceUrbanAir = 1, //MSRA的数据
-    WHIPMSourcePM25in = 2, //全国各地的环保部站点的监测数据
-    WHIPMSourceDevice = 3,
-};
+//typedef NS_ENUM(NSInteger, WHIPMSource) {
+//    WHIPMSourceUnkonw = 0,
+//    WHIPMSourceUrbanAir = 1, //MSRA的数据
+//    WHIPMSourcePM25in = 2, //全国各地的环保部站点的监测数据
+//    WHIPMSourceDevice = 3,
+//};
 
 @interface WHIPMData : WHIBaseModel
 
 @property (nonatomic, copy) NSNumber *AQI;
 @property (nonatomic, copy) NSNumber *PM25;
-@property (nonatomic, assign) WHIPMSource source;
+@property (nonatomic, copy) NSNumber *source;
 @property (nonatomic, strong) NSString *lastRecordTime;
 
 @end

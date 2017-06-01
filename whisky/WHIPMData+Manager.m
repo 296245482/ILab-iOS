@@ -44,7 +44,6 @@
             }else{
                 if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result count] >= 1) {
                     pmData = [MTLJSONAdapter modelOfClass:[WHIPMData class] fromJSONDictionary:result[@"data"] error:&error];
-                    pmData.source = 3;
                     NSString *lastRecordTime = [[result objectForKey:@"data"]objectForKey:@"time_point"];
                     pmData.lastRecordTime = lastRecordTime;
 //                    NSLog(@"last time is %@",lastRecordTime);

@@ -18,6 +18,7 @@
 @synthesize token = _token;
 @synthesize autoUpload = _autoUpload;
 @synthesize lastPm = _lastPm;
+@synthesize lastSource = _lastSource;
 
 + (instancetype)sharedDefaults {
     static dispatch_once_t onceToken;
@@ -137,6 +138,15 @@
     } else {
         _lastPm = [[NSUserDefaults standardUserDefaults] objectForKey:@"@WHILastPm"];
         return _lastPm;
+    }
+}
+
+- (NSNumber *)lastSource {
+    if (_lastSource) {
+        return _lastSource;
+    } else {
+        _lastSource = [[NSUserDefaults standardUserDefaults] objectForKey:@"@WHILastSource"];
+        return _lastSource;
     }
 }
 
