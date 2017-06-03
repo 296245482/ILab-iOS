@@ -86,13 +86,15 @@
             }else{
                 if ([result[@"data"] isKindOfClass:[NSDictionary class]]) {
                     pmData = [MTLJSONAdapter modelOfClass:[WHIPMData class] fromJSONDictionary:result[@"data"] error:&error];
-                    [WHIUserDefaults sharedDefaults].lastPm = pmData.PM25;
-                    //NSLog(@"right token");
                 } else {
                     pmData = [[WHIPMData alloc] init];
                     pmData.AQI = @(0);
                     pmData.PM25 = [WHIUserDefaults sharedDefaults].lastPm;
                 }
+//                pmData = [[WHIPMData alloc] init];
+//                pmData.PM25 = @(arc4random() % 100);
+//                pmData.source = @(arc4random() % 100);
+//                NSLog(@"aa-%@, b-%@",pmData.PM25,pmData.source);
                 complete(pmData, nil);
             }
         }

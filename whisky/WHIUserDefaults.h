@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) float weight;
 @property (nonatomic, strong) NSNumber *lastPm;
-@property (nonatomic, copy) NSNumber *lastSource;
+@property (nonatomic, strong) NSNumber *lastSource;
 @property (nonatomic, assign) BOOL agreePrivacy;
 
 @end

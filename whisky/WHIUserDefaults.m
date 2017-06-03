@@ -126,10 +126,9 @@
 }
 
 - (void)setLastPm:(NSNumber *)lastPm {
-    if (_lastPm == nil) {
-        _lastPm = lastPm;
-        [[NSUserDefaults standardUserDefaults] setValue:_lastPm forKey:@"WHILastPm"];
-    }
+    _lastPm = lastPm;
+    [[NSUserDefaults standardUserDefaults] setValue:_lastPm forKey:@"WHILastPm"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSNumber *)lastPm {
@@ -139,6 +138,12 @@
         _lastPm = [[NSUserDefaults standardUserDefaults] objectForKey:@"@WHILastPm"];
         return _lastPm;
     }
+}
+
+- (void)setLastSource:(NSNumber *)lastSource {
+    _lastSource = lastSource;
+    [[NSUserDefaults standardUserDefaults] setValue:_lastSource forKey:@"WHILastSource"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSNumber *)lastSource {

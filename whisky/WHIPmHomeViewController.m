@@ -163,7 +163,7 @@
         [WHIUserDefaults sharedDefaults].lastPm = result.PM25;
         [WHIUserDefaults sharedDefaults].lastSource = result.source;
     }];
-    NSLog(@"a-%@, b-%@",[WHIUserDefaults sharedDefaults].lastPm,[WHIUserDefaults sharedDefaults].lastSource);
+//    NSLog(@"a-%@, b-%@",[WHIUserDefaults sharedDefaults].lastPm,[WHIUserDefaults sharedDefaults].lastSource);
 }
 
 //新增一条记录
