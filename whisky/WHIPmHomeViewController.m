@@ -91,6 +91,7 @@
 @property (nonatomic, strong) NSTimer *autoUpload;
 @property (nonatomic, strong) NSTimer *autoSetNotification;
 @property (nonatomic, strong) NSTimer *autoAddOneRecord;
+@property (nonatomic, strong) NSTimer *autoSearch;
 
 @property (nonatomic, strong) NSDate *lastDate;
 @property (nonatomic, assign) NSInteger lastSteps;
@@ -152,13 +153,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoUploadPMData) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationEveryday) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addOneRecord) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(searchForPMData) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateHealthAndAirLabel) name:@"WHIPMChangeNotification" object:nil];
+}
+
+- (void)searchForPMData{
+    CLLocation *userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
+    [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
+        [WHIUserDefaults sharedDefaults].lastPm = result.PM25;
+        [WHIUserDefaults sharedDefaults].lastSource = result.source;
+    }];
+//    NSLog(@"a-%@, b-%@",[WHIUserDefaults sharedDefaults].lastPm,[WHIUserDefaults sharedDefaults].lastSource);
 }
 
 //新增一条记录
 - (void)addOneRecord{
     CLLocation *userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
-    NSString *app_version = @"iOS.2017.05.06";
+    NSString *app_version = @"iOS.2017.06.01";
     NSDate *nowDate = [NSDate date];
     
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {
@@ -199,7 +210,7 @@
                                     data.pm25_concen = data.pm25_concen / 2;
                                 }
                             }
-                            data.pm25_datasource = result.source;
+                            data.pm25_datasource = 3;
                         }else {
                             //805可用
                             data.pm25_monitor = deviceId;
@@ -262,71 +273,69 @@
                 }];
             }];
         } else {
-            [WHIPMData getPMData:userLocation.coordinate complete:^(WHIPMData *result, NSError * _Nullable error) {
-                [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
-                    self.lastDate = nowDate;
-                    WHIData *data = [[WHIData alloc] init];
-                    if (succeed){
-                        if ((stepCount - _lastSteps) < 10000){
-                            data.steps = stepCount - _lastSteps;
-                        }
-                        _lastSteps = stepCount;
+            [[WHIHealthKit sharedHealthKit] queryStepCount:NULL endDate:nowDate complete:^(double stepCount, BOOL succeed){
+                self.lastDate = nowDate;
+                WHIData *data = [[WHIData alloc] init];
+                if (succeed){
+                    if ((stepCount - _lastSteps) < 10000){
+                        data.steps = stepCount - _lastSteps;
+                    }
+                    _lastSteps = stepCount;
+                }else{
+                    //                        NSLog(@"获取步数失败");
+                }
+                
+                data.user_id = [WHIUser currentUser].objectId ?: @"";;
+                data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
+                data.pm25_monitor = deviceId;
+                data.APP_version = app_version;
+                data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
+                
+                data.time_point = nowDate;
+                data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
+                if ([WHIUserDefaults sharedDefaults].lastPm) {
+                    data.pm25_concen = [[WHIUserDefaults sharedDefaults].lastPm doubleValue];
+                    if (!data.outdoor) {
+                        data.pm25_concen = data.pm25_concen / 2;
+                    }
+                }
+                
+                data.longitude = userLocation.coordinate.longitude;
+                data.latitude = userLocation.coordinate.latitude;
+                data.pm25_datasource = 1;//[([WHIUserDefaults sharedDefaults].lastSource)intValue];
+                data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
+                double weight = [WHIUserDefaults sharedDefaults].weight;
+                double baseBreath = 7.8 * weight * 13 / 1000;
+                switch (data.status) {
+                    case WHIMotionStateStationary: {
+                        break;
+                    }
+                    case WHIMotionStateWalk: {
+                        baseBreath = baseBreath * 2.1;
+                        break;
+                    }
+                    case WHIMotionStateRunning: {
+                        baseBreath = baseBreath * 6;
+                        break;
+                    }
+                    case WHIMotionStateBiking: {
+                        baseBreath = baseBreath * 2.1;
+                        break;
+                    }
+                }
+                data.ventilation_rate = baseBreath;
+                data.ventilation_vol = (baseBreath * timePass) / 60;
+                data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
+                
+                //                NSLog(@"data is %@",data);
+                [WHIGlobal sharedGlobal].pmData = data;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
+                [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
+                    if (success) {
+                        //                            NSLog(@"用户定位数据查询分支insert success");
                     }else{
-//                        NSLog(@"获取步数失败");
+                        //                            NSLog(@"insert failed");
                     }
-                    
-                    data.user_id = [WHIUser currentUser].objectId ?: @"";;
-                    data.database_access_token = [WHIUserDefaults sharedDefaults].token ?: @"";
-                    data.pm25_monitor = deviceId;
-                    data.APP_version = app_version;
-                    data.connection = [AFNetworkReachabilityManager sharedManager].isReachable;
-                    
-                    data.time_point = nowDate;
-                    data.outdoor = ![AFNetworkReachabilityManager sharedManager].isReachableViaWiFi;
-                    if (result) {
-                        data.pm25_concen = [result.PM25 doubleValue];
-                        if (!data.outdoor) {
-                            data.pm25_concen = data.pm25_concen / 2;
-                        }
-                    }
-                    
-                    data.longitude = userLocation.coordinate.longitude;
-                    data.latitude = userLocation.coordinate.latitude;
-                    data.pm25_datasource = 1;
-                    data.status = [[WHIMotionManager sharedMotionManager] getActivityState];
-                    double weight = [WHIUserDefaults sharedDefaults].weight;
-                    double baseBreath = 7.8 * weight * 13 / 1000;
-                    switch (data.status) {
-                        case WHIMotionStateStationary: {
-                            break;
-                        }
-                        case WHIMotionStateWalk: {
-                            baseBreath = baseBreath * 2.1;
-                            break;
-                        }
-                        case WHIMotionStateRunning: {
-                            baseBreath = baseBreath * 6;
-                            break;
-                        }
-                        case WHIMotionStateBiking: {
-                            baseBreath = baseBreath * 2.1;
-                            break;
-                        }
-                    }
-                    data.ventilation_rate = baseBreath;
-                    data.ventilation_vol = (baseBreath * timePass) / 60;
-                    data.pm25_intake = data.pm25_concen * data.ventilation_vol/1000000;
-                    
-//                    NSLog(@"data is %@",data);
-                    [WHIGlobal sharedGlobal].pmData = data;
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"WHIPMChangeNotification" object:nil];
-                    [[WHIDatabaseManager sharedManager] insertData:data complete:^(BOOL success) {
-                        if (success) {
-//                            NSLog(@"用户定位数据查询分支insert success");
-                        }else{
-//                            NSLog(@"insert failed");
-                        }
-                    }];
                 }];
             }];
         }
@@ -396,10 +405,12 @@
     
     self.autoUpload = [NSTimer scheduledTimerWithTimeInterval:1800 target:self selector:@selector(autoUploadPMData) userInfo:nil repeats:YES];
     self.autoSetNotification = [NSTimer scheduledTimerWithTimeInterval:43200 target:self selector:@selector(notificationEveryday) userInfo:nil repeats:YES];
-    self.autoAddOneRecord = [NSTimer scheduledTimerWithTimeInterval:queryTimerDutaion target:self selector:@selector(addOneRecord) userInfo:nil repeats:YES];
+    self.autoAddOneRecord = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(addOneRecord) userInfo:nil repeats:YES];
+    self.autoSearch = [NSTimer scheduledTimerWithTimeInterval:900 target:self selector:@selector(searchForPMData) userInfo:nil repeats:YES];
     [self.autoUpload fire];
     [self.autoSetNotification fire];
     [self.autoAddOneRecord fire];
+    [self.autoSearch fire];
 }
 
 - (void)updateHealthAndAirLabel {
