@@ -92,6 +92,7 @@
 @property (nonatomic, strong) NSTimer *autoSetNotification;
 @property (nonatomic, strong) NSTimer *autoAddOneRecord;
 @property (nonatomic, strong) NSTimer *autoSearch;
+@property (nonatomic, strong) NSTimer *autoLocate;
 
 @property (nonatomic, strong) NSDate *lastDate;
 @property (nonatomic, assign) NSInteger lastSteps;
@@ -164,6 +165,19 @@
         [WHIUserDefaults sharedDefaults].lastSource = result.source;
     }];
 //    NSLog(@"a-%@, b-%@",[WHIUserDefaults sharedDefaults].lastPm,[WHIUserDefaults sharedDefaults].lastSource);
+}
+
+//定期修改定位数据
+- (void)autuGetLocation{
+    [self updateCity];
+//    NSLog(@"0719 %@",[WHILocationManager sharedManager].location);
+//    CLLocation *userLocation = [WHILocationManager sharedManager].location;
+//    if (userLocation) {
+//        [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
+//        NSLog(@"0719 location changed %@", userLocation);
+//    } else {
+//        userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
+//    }
 }
 
 //新增一条记录
@@ -407,6 +421,8 @@
     self.autoSetNotification = [NSTimer scheduledTimerWithTimeInterval:43200 target:self selector:@selector(notificationEveryday) userInfo:nil repeats:YES];
     self.autoAddOneRecord = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(addOneRecord) userInfo:nil repeats:YES];
     self.autoSearch = [NSTimer scheduledTimerWithTimeInterval:900 target:self selector:@selector(searchForPMData) userInfo:nil repeats:YES];
+    self.autoLocate = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(autuGetLocation) userInfo:nil repeats:YES];
+    [self.autoLocate fire];
     [self.autoUpload fire];
     [self.autoSetNotification fire];
     [self.autoAddOneRecord fire];
@@ -541,7 +557,7 @@
 
 - (void)updateAll {
     self.navigationItem.prompt = @"刷新中";
-    [self updateCity];
+    
     
     self.nowDate = [NSDate date];
     [[WHIDatabaseManager sharedManager] getTwoHourData:self.nowDate complete:^(NSArray * _Nonnull breath, NSArray * _Nonnull pm) {
