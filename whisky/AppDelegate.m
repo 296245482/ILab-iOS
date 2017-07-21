@@ -97,13 +97,13 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
-    if (userLocation) {
-        [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
-    } else {
-        userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
-    }
-}
+//- (void)locationManager:(WHILocationManager *)manager didUpdateBMKUserLocation:(CLLocation *)userLocation {
+//    if (userLocation) {
+//        [WHIUserDefaults sharedDefaults].lastLocation = userLocation;
+//    } else {
+//        userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
+//    }
+//}
 
 - (void)setupThirdPart:(NSDictionary *)launchOptions {
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleDark];

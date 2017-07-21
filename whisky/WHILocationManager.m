@@ -78,6 +78,12 @@
 
 - (void)getCurrentCityWithBlock:(WHILocationCallback)complete {
     [self startLocation:^(CLLocation *location, NSError *error) {
+        if(location){
+            [WHIUserDefaults sharedDefaults].lastLocation = location;
+        }
+        else{
+            location = [WHIUserDefaults sharedDefaults].lastLocation;
+        }
         if (error) {
             complete(nil, error);
         } else{
@@ -87,6 +93,7 @@
                 complete(location, error);
             }];
         }
+        [_locService stopUserLocationService];
     }];
 }
 

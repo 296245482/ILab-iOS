@@ -92,6 +92,7 @@
 @property (nonatomic, strong) NSTimer *autoSetNotification;
 @property (nonatomic, strong) NSTimer *autoAddOneRecord;
 @property (nonatomic, strong) NSTimer *autoSearch;
+@property (nonatomic, strong) NSTimer *autoLocate;
 
 @property (nonatomic, strong) NSDate *lastDate;
 @property (nonatomic, assign) NSInteger lastSteps;
@@ -164,6 +165,10 @@
         [WHIUserDefaults sharedDefaults].lastSource = result.source;
     }];
 //    NSLog(@"a-%@, b-%@",[WHIUserDefaults sharedDefaults].lastPm,[WHIUserDefaults sharedDefaults].lastSource);
+}
+
+- (void)autoGetLocation{
+    [self updateCity];
 }
 
 //新增一条记录
@@ -407,6 +412,8 @@
     self.autoSetNotification = [NSTimer scheduledTimerWithTimeInterval:43200 target:self selector:@selector(notificationEveryday) userInfo:nil repeats:YES];
     self.autoAddOneRecord = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(addOneRecord) userInfo:nil repeats:YES];
     self.autoSearch = [NSTimer scheduledTimerWithTimeInterval:900 target:self selector:@selector(searchForPMData) userInfo:nil repeats:YES];
+    self.autoLocate = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(autoGetLocation) userInfo:nil repeats:YES];
+    [self.autoLocate fire];
     [self.autoUpload fire];
     [self.autoSetNotification fire];
     [self.autoAddOneRecord fire];
@@ -541,7 +548,7 @@
 
 - (void)updateAll {
     self.navigationItem.prompt = @"Loading";
-    [self updateCity];
+//    [self updateCity];
     
     self.nowDate = [NSDate date];
     [[WHIDatabaseManager sharedManager] getTwoHourData:self.nowDate complete:^(NSArray * _Nonnull breath, NSArray * _Nonnull pm) {
