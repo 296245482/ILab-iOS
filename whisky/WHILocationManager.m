@@ -80,7 +80,7 @@
     [self startLocation:^(CLLocation *location, NSError *error) {
         if (location) {
             [WHIUserDefaults sharedDefaults].lastLocation = location;
-            NSLog(@"0719 location changed %@", location);
+//            NSLog(@"0719 location changed %@", location);
         } else {
             location = [WHIUserDefaults sharedDefaults].lastLocation;
         }

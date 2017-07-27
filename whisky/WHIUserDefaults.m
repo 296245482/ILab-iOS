@@ -19,6 +19,7 @@
 @synthesize autoUpload = _autoUpload;
 @synthesize lastPm = _lastPm;
 @synthesize lastSource = _lastSource;
+@synthesize heartRate = _heartRate;
 
 + (instancetype)sharedDefaults {
     static dispatch_once_t onceToken;
@@ -71,6 +72,16 @@
 
 - (float)weight {
     return [[NSUserDefaults standardUserDefaults] doubleForKey:@"WHIWeight"];
+}
+
+- (void)setHeartRate:(double)heartRate {
+    _heartRate = heartRate;
+    [[NSUserDefaults standardUserDefaults] setObject:@(_heartRate) forKey:@"WHIHeartRate"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (double)heartRate {
+    return [[NSUserDefaults standardUserDefaults] doubleForKey:@"WHIHeartRate"];
 }
 
 - (void)setAgreePrivacy:(BOOL)agreePrivacy {

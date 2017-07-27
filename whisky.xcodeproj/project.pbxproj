@@ -58,6 +58,7 @@
 		18B659591CF842C700772326 /* WHIUser+Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B659581CF842C700772326 /* WHIUser+Manager.m */; };
 		18E0742D1CFEB84C005E1C32 /* WHIHelpTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */; };
 		8C1834111E829BAF008F4B12 /* forecastAirData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1834101E829BAF008F4B12 /* forecastAirData.m */; };
+		8C75FB1E1F28951D00BCF5B9 /* BlueToothDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C75FB1D1F28951D00BCF5B9 /* BlueToothDataViewController.m */; };
 		8CA87D381E7EB653000F07BD /* ForecastTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */; };
 		F2DB17F7DEFCC0BA5BD57BFB /* Pods_whisky.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */; };
 		FD1BC7311E2E31E700E2B27C /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */; };
@@ -202,6 +203,8 @@
 		18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHIHelpTableViewController.m; sourceTree = "<group>"; };
 		8C18340F1E829BAF008F4B12 /* forecastAirData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forecastAirData.h; sourceTree = "<group>"; };
 		8C1834101E829BAF008F4B12 /* forecastAirData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = forecastAirData.m; sourceTree = "<group>"; };
+		8C75FB1C1F28951D00BCF5B9 /* BlueToothDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueToothDataViewController.h; sourceTree = "<group>"; };
+		8C75FB1D1F28951D00BCF5B9 /* BlueToothDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueToothDataViewController.m; sourceTree = "<group>"; };
 		8CA87D361E7EB653000F07BD /* ForecastTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastTableViewController.h; sourceTree = "<group>"; };
 		8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastTableViewController.m; sourceTree = "<group>"; };
 		8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whisky.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -563,8 +566,6 @@
 			children = (
 				8CA87D361E7EB653000F07BD /* ForecastTableViewController.h */,
 				8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */,
-				1882097A1CF6A91D00FF2702 /* WHIBluetoothTableViewController.h */,
-				1882097B1CF6A91D00FF2702 /* WHIBluetoothTableViewController.m */,
 				18E0742B1CFEB84C005E1C32 /* WHIHelpTableViewController.h */,
 				18E0742C1CFEB84C005E1C32 /* WHIHelpTableViewController.m */,
 				FD1BC7361E2E6E6900E2B27C /* Device805TableViewController.h */,
@@ -576,8 +577,6 @@
 		18B6593D1CF6D28E00772326 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				18B6593E1CF6D2A100772326 /* WHIBluetoothTableViewCell.h */,
-				18B6593F1CF6D2A100772326 /* WHIBluetoothTableViewCell.m */,
 				FD1BC72F1E2E31D500E2B27C /* DeviceTableViewCell.h */,
 				FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */,
 			);
@@ -587,6 +586,12 @@
 		18B659441CF6DA1E00772326 /* BlueTooth */ = {
 			isa = PBXGroup;
 			children = (
+				8C75FB1C1F28951D00BCF5B9 /* BlueToothDataViewController.h */,
+				8C75FB1D1F28951D00BCF5B9 /* BlueToothDataViewController.m */,
+				1882097A1CF6A91D00FF2702 /* WHIBluetoothTableViewController.h */,
+				1882097B1CF6A91D00FF2702 /* WHIBluetoothTableViewController.m */,
+				18B6593E1CF6D2A100772326 /* WHIBluetoothTableViewCell.h */,
+				18B6593F1CF6D2A100772326 /* WHIBluetoothTableViewCell.m */,
 				18B659411CF6DA1400772326 /* WHIBlueTooth.h */,
 				18B659421CF6DA1400772326 /* WHIBlueTooth.m */,
 			);
@@ -915,6 +920,7 @@
 				1800C2611CED96A4009018BB /* WHIPmHomeViewController.m in Sources */,
 				184F6D791D52D61700D04AB9 /* WHIForgetPasswordViewController.m in Sources */,
 				183BB4191CC9EA9A006D8EA7 /* UIAlertController+ShowAlertMessage.m in Sources */,
+				8C75FB1E1F28951D00BCF5B9 /* BlueToothDataViewController.m in Sources */,
 				FD1BC7381E2E6E6900E2B27C /* Device805TableViewController.m in Sources */,
 				18378AAD1CE185E80051665C /* WHIBaseDataSource.m in Sources */,
 				1872F6421CD0BDB30009302E /* NSValue+Location.m in Sources */,

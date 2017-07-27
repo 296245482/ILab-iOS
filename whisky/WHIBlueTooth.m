@@ -7,6 +7,7 @@
 //
 
 #import "WHIBlueTooth.h"
+#import "WHIUserDefaults.h"
 
 @interface WHIBlueTooth ()
 
@@ -99,6 +100,7 @@ static id _instance;
     [self performSelector:@selector(discoverServiceAndCharacteristicWithTime) withObject:nil afterDelay:time];
 }
 
+//单次写数据
 - (void)writeCharacteristicWithServiceUUID:(NSString *)sUUID CharacteristicUUID:(NSString *)cUUID data:(NSData *)data {
     for (CBService *service in self.ConnectionDevice.services) {
         if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
@@ -111,25 +113,33 @@ static id _instance;
     }
 }
 
+//订阅charateristic数据，不断的接收设备发送的数据，enable设置成yes，订阅成功回调didUpdateNotificationStateForCharacteristic
 - (void)setNotificationForCharacteristicWithServiceUUID:(NSString *)sUUID CharacteristicUUID:(NSString *)cUUID enable:(BOOL)enable {
     for (CBService *service in self.ConnectionDevice.services) {
-        if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
+//        if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
             for (CBCharacteristic *characteristic in service.characteristics) {
-                if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:cUUID]]) {
+//                if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:cUUID]]) {
                     [self.ConnectionDevice setNotifyValue:enable forCharacteristic:characteristic];
                 }
-            }
-        }
+//            }
+//        }
     }
 }
+
+//调用读取连接设备中的service的characteritic中的数据，继续回调didUpdateValueForCharacteristic，readValueForCharateritic非实时，单次接收
 -(void)readCharacteristicWithServiceUUID:(NSString *)sUUID CharacteristicUUID:(NSString *)cUUID{
+    NSLog(@"即将读取数据1");
     for (CBService *service in self.ConnectionDevice.services) {
-        if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
+        NSLog(@"即将读取数据1.1");
+//        if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
+            NSLog(@"即将读取数据1.2");
             for (CBCharacteristic *characteristic in service.characteristics) {
-                if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:cUUID]]) {
+                NSLog(@"即将读取数据2.0");
+//                if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:cUUID]]) {
+                    NSLog(@"即将读取数据2");
                     [self.ConnectionDevice readValueForCharacteristic:characteristic];
-                }
-            }
+//                }
+//            }
         }
     }
 }
@@ -159,6 +169,12 @@ static id _instance;
 
 #pragma mark - CBCentralManagerDelegate代理方法
 
+//CBCentralManagerStateUnknown = 0,
+//CBCentralManagerStateResetting = 1,
+//CBCentralManagerStateUnsupported = 2,
+//CBCentralManagerStateUnauthorized = 3,
+//CBCentralManagerStatePoweredOff = 4,
+//CBCentralManagerStatePoweredOn = 5,
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     DDLogDebug(@"当前的设备状态:%ld", (long)central.state);
     self.state = central.state;
@@ -211,24 +227,33 @@ static id _instance;
     DDLogDebug(@"didWriteValueForCharacteristic写入值发生改变,%@", error);
 }
 
+//单次设备数据传回
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if (error) {
-        DDLogDebug(@"didUpdateValueForCharacteristic接收数据发生错误,%@", error);
+        DDLogDebug(@"0726 didUpdateValueForCharacteristic接收数据发生错误,%@", error);
         return;
     }
-    NSString *string=[[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NotiValueChange object:characteristic.value];
-    DDLogDebug(@"didUpdateValueForCharacteristic接收到的数据%@", string);
+//    NSLog(@"0727 %@, type: %d", characteristic.value, [characteristic.value isKindOfClass:[NSData class]]);
+    NSData *data = characteristic.value;
+    uint8_t *data_byte = (uint8_t *)[data bytes];
+    double heartRate = data_byte[13];
+    [WHIUserDefaults sharedDefaults].heartRate = heartRate;
+    NSLog(@"0727 %f", [WHIUserDefaults sharedDefaults].heartRate);
 }
 
+//订阅状态下数据传回
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if (error) {
-        DDLogDebug(@"didUpdateNotificationStateForCharacteristic接收数据发生错误,%@", error);
+        DDLogDebug(@"0726 didUpdateNotificationStateForCharacteristic接收数据发生错误,%@", error);
         return;
     }
-    NSString *string=[[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
-    DDLogDebug(@"didUpdateNotificationStateForCharacteristic收到的数据为%@", string);
+    NSData *data = characteristic.value;
+    uint8_t *data_byte = (uint8_t *)[data bytes];
+    double heartRate = data_byte[13];
+    [WHIUserDefaults sharedDefaults].heartRate = heartRate;
+//    NSString *string=[[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+//    DDLogDebug(@"0726 NotificationState收到的数据为%@", string);
 }
 #pragma mark - getter
 - (BOOL)isReady {

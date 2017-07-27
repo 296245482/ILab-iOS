@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL autoUpload;
 
 @property (nonatomic, assign) float weight;
+@property (nonatomic, assign) double heartRate;
 @property (nonatomic, strong) NSNumber *lastPm;
 @property (nonatomic, strong) NSNumber *lastSource;
 @property (nonatomic, assign) BOOL agreePrivacy;
