@@ -94,7 +94,7 @@
                 complete(location, error);
             }];
         }
-        [_locService stopUserLocationService];
+//        [_locService stopUserLocationService];
     }];
 }
 
