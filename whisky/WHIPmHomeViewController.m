@@ -53,6 +53,10 @@
 
 @property (weak, nonatomic) IBOutlet BarChartView *weekPMBreathBarChartView;
 @property (weak, nonatomic) IBOutlet UIView *weekBreathPMContainerView;
+
+@property (weak, nonatomic) IBOutlet LineChartView *todayHeartRateLineChartView;
+@property (weak, nonatomic) IBOutlet UIView *todayHeartRateContainerView;
+
 /**
  *  chart 1
  */
@@ -103,6 +107,7 @@
 
 @property (nonatomic, strong) NSArray *dayBreathData;
 @property (nonatomic, strong) NSArray *dayPMData;
+@property (nonatomic, strong) NSArray *dayHeartRateData;
 
 @property (nonatomic, strong) NSArray *dayBreathAccumuData;
 
@@ -139,7 +144,7 @@
     
     [[WHIMotionManager sharedMotionManager] getActivityState];
     
-    self.chart0Views = @[self.todayBreathPMContainerView, self.todayPMBreathContainerView,  self.hourBreathPMContainerView, self.weekBreathPMContainerView];
+    self.chart0Views = @[self.todayBreathPMContainerView, self.todayPMBreathContainerView,  self.hourBreathPMContainerView, self.weekBreathPMContainerView, self.todayHeartRateContainerView];
     self.chart1Views = @[self.todayPMContainerView, self.hourPMContainerView, self.todayBreathContainerView,  self.hourBreathContainerView, self.todayTotalBreathContainerView, self.weekBreathContainerView];
     [self startTimer];
  
@@ -588,6 +593,12 @@
         [self updateTodayTotalBreathPMData];
     }];
     
+    //心率数据更新
+    [[WHIDatabaseManager sharedManager] getTodayHeartRateData:self.nowDate complete:^(NSArray * _Nonnull heartRate) {
+        self.dayHeartRateData = heartRate;
+        [self updateTodayHeartRateData];
+    }];
+    
     [self updateOneHourPMBreath];
     
     [self updateWeek:^(NSArray *breath, NSArray *pmBreath) {
@@ -666,6 +677,12 @@
 - (void)updateTodayBreathData {
     BarChartDataSet *set = [self convertToBarChart:self.dayBreathData];
     self.todayBreathBarChartView.data = [[BarChartData alloc] initWithXVals:[self dayAxis] dataSets:@[set]];
+}
+
+//更新心率图
+- (void)updateTodayHeartRateData {
+    LineChartDataSet *set = [self convertToLineChart:self.dayHeartRateData];
+    self.todayHeartRateLineChartView.data = [[LineChartData alloc] initWithXVals:[self dayAxis] dataSets:@[set]];
 }
 
 - (void)updateTodayPMData {
@@ -826,6 +843,16 @@
         _weekPMBreathBarChartView.leftAxis.valueFormatter = self.integerAxisFormatter;
     }
 }
+
+//心率作图
+- (void)setTodayHeartRateLineChartView:(LineChartView *)todayHeartRateLineChartView {
+    if (_todayHeartRateLineChartView != todayHeartRateLineChartView) {
+        _todayHeartRateLineChartView = todayHeartRateLineChartView;
+        [self configLineChart:_todayHeartRateLineChartView];
+        _todayHeartRateLineChartView.leftAxis.valueFormatter = self.integerAxisFormatter;
+    }
+}
+
 
 - (void)setHourPMLineChart:(LineChartView *)hourPMLineChart {
     if (_hourPMLineChart != hourPMLineChart) {

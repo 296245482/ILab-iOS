@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)queryForUnUploadHeartRateData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete;
 - (void)updateHeartDataToUpload:(NSArray *)heartData;
 
+- (void)getTodayHeartRateData:(NSDate *)date complete:(void (^)(NSArray * _Nonnull))complete;
+
 @end
 
 NS_ASSUME_NONNULL_END
