@@ -268,7 +268,10 @@ static id _instance;
     }
     NSData *data = characteristic.value;
     uint8_t *data_byte = (uint8_t *)[data bytes];
-    double heartRate = data_byte[13];
+    double heartRate = 0;
+    if(data_byte){
+        heartRate = data_byte[13];
+    }
     [WHIUserDefaults sharedDefaults].heartRate = heartRate;
 //    NSString *string=[[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
 //    DDLogDebug(@"0726 NotificationState收到的数据为%@", string);
