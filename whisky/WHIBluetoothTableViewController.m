@@ -103,15 +103,12 @@
     
     [self.bluetooth connectionWithDeviceUUID:[((CBPeripheral *)self.devices[indexPath.row]).identifier UUIDString] TimeOut:10 CompleteBlock:^(CBPeripheral *device, NSError *err) {
         if (device) {
-            NSLog(@"0726 查找设备的服务和特征...");
             [self.bluetooth discoverServiceAndCharacteristicWithInterval:3 CompleteBlock:^(NSArray *serviceArray, NSArray *characteristicArray, NSError *err) {
-                NSLog(@"0726 查找服务和特征成功 %@ -- %@",serviceArray, characteristicArray);
                 if(serviceArray.count){
                     for (CBService *service in serviceArray) {
                         for (CBCharacteristic *characteristic in characteristicArray) {
                             NSString *sUUID = service.UUID;
                             NSString *cUUID = characteristic.UUID;
-                            NSLog(@"0726 服务：%@ -- 特征：%@",sUUID, cUUID);
                             [self.bluetooth setNotificationForCharacteristicWithServiceUUID:sUUID CharacteristicUUID:cUUID enable:YES];
                         }
                     }

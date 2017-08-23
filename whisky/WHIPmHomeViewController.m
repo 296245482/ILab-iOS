@@ -923,6 +923,17 @@
                 }
             }];
         }];
+        
+        [[WHIDatabaseManager sharedManager] queryForUnUploadHeartRateData:2000 complete:^(NSArray * result){
+//            NSLog(@"0821 data is %@", result);
+            [WHIData uploadHeart:result complete:^(NSArray * _Nullable array, NSError * _Nullable error) {
+                for (HeartRateData *data in array) {
+                    data.upload = YES;
+                }
+//                NSLog(@"0821 data is %@", array);
+                [[WHIDatabaseManager sharedManager] updateHeartDataToUpload:array];
+            }];
+        }];
     }
 }
 

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "WHIData.h"
 #import "DeviceWifi.h"
+#import "HeartRateData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,6 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)queryForDeviceId:(NSString *)wifiName;
 
 - (void)searchLastWeekData:(NSDate *)nowDate complete:(void (^)(NSArray * _Nonnull))complete;
+
+- (void)insertHeartData:(HeartRateData *)data complete:(void (^) (BOOL success))complete;
+- (void)queryForUnUploadHeartRateData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete;
+- (void)updateHeartDataToUpload:(NSArray *)heartData;
 
 @end
 

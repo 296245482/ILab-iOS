@@ -8,6 +8,9 @@
 
 #import "WHIBlueTooth.h"
 #import "WHIUserDefaults.h"
+#import "HeartRateData.h"
+#import "WHIUser+Manager.h"
+#import "WHIDatabaseManager.h"
 
 @interface WHIBlueTooth ()
 
@@ -128,15 +131,10 @@ static id _instance;
 
 //调用读取连接设备中的service的characteritic中的数据，继续回调didUpdateValueForCharacteristic，readValueForCharateritic非实时，单次接收
 -(void)readCharacteristicWithServiceUUID:(NSString *)sUUID CharacteristicUUID:(NSString *)cUUID{
-    NSLog(@"即将读取数据1");
     for (CBService *service in self.ConnectionDevice.services) {
-        NSLog(@"即将读取数据1.1");
 //        if ([service.UUID isEqual:[CBUUID UUIDWithString:sUUID]]) {
-            NSLog(@"即将读取数据1.2");
             for (CBCharacteristic *characteristic in service.characteristics) {
-                NSLog(@"即将读取数据2.0");
 //                if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:cUUID]]) {
-                    NSLog(@"即将读取数据2");
                     [self.ConnectionDevice readValueForCharacteristic:characteristic];
 //                }
 //            }
@@ -237,9 +235,29 @@ static id _instance;
 //    NSLog(@"0727 %@, type: %d", characteristic.value, [characteristic.value isKindOfClass:[NSData class]]);
     NSData *data = characteristic.value;
     uint8_t *data_byte = (uint8_t *)[data bytes];
-    double heartRate = data_byte[13];
+    double heartRate = 0;
+    if(data_byte){
+        heartRate = data_byte[13];
+    }
     [WHIUserDefaults sharedDefaults].heartRate = heartRate;
-    NSLog(@"0727 %f", [WHIUserDefaults sharedDefaults].heartRate);
+//    NSLog(@" 0821 %f", [WHIUserDefaults sharedDefaults].heartRate);
+    [self insertOneHeart:heartRate];
+}
+
+-(void)insertOneHeart:(double)heart{
+    HeartRateData *heartData = [[HeartRateData alloc] init];
+    heartData.user_id = [WHIUser currentUser].objectId ?: @"";
+    heartData.user_name = [WHIUser currentUser].name ?: @"";
+    heartData.time_point = [NSDate date];
+    heartData.heart_rate = heart;
+//    NSLog(@"0821 %@",heartData);
+    [[WHIDatabaseManager sharedManager] insertHeartData:heartData complete:^(BOOL success) {
+        if (success) {
+//            NSLog(@"心率 insert success");
+        }else{
+            //            NSLog(@"insert failed");
+        }
+    }];
 }
 
 //订阅状态下数据传回

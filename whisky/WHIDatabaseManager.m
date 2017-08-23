@@ -10,6 +10,7 @@
 #import "NSDate+Calendar.h"
 #import "NSDate+Formatter.h"
 #import "FMDB.h"
+#import "WHIUser+Manager.h"
 
 @interface WHIDatabaseManager ()
 
@@ -72,6 +73,15 @@ static WHIDatabaseManager *manager = nil;
                 DDLogDebug(@"error when creating Device wifi table");
             } else {
                 DDLogDebug(@"succ to creating Device Wifi table");
+            }
+        }
+        if (![db tableExists:@"HeartRate"]) {
+            NSString * sql = @"CREATE TABLE 'HeartRate' ('id' INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL , 'user_id' INTERGER, 'user_name' VERCHAR(32), 'time_point' DOUBLE, 'heart_rate' DOUBLE, 'longitude' DOUBLE, 'latitude' DOUBLE, 'upload' Bool DEFAULT false)";
+            BOOL res = [db executeUpdate:sql];
+            if (!res) {
+                DDLogDebug(@"error when creating Heart Rate table");
+            } else {
+                DDLogDebug(@"succ to creating Heart Rate table");
             }
         }
         [db close];
@@ -142,6 +152,30 @@ static WHIDatabaseManager *manager = nil;
        NSString *sql = @"insert into DeviceWifi (device_id, wifi) values (?, ?)";
         BOOL success = [db executeUpdate:sql, (deviceWifi.deviceId), (deviceWifi.wifiName)];
         if(!success){
+//            NSLog(@"插入失败");
+            *rollback = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete(NO);
+            });
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(YES);
+        });
+    }];
+}
+
+- (void)insertHeartData:(HeartRateData *)data complete:(void (^)(BOOL))complete {
+    if (data == nil) {
+        complete(NO);
+    }
+//    if (data.time_point == nil) {
+//        complete(NO);
+//    }
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSString *sql = @"insert into HeartRate (user_id, user_name, time_point, heart_rate, longitude, latitude, upload) values (?, ?, ?, ?, ?, ?, ?)";
+        BOOL success = [db executeUpdate:sql, (data.user_id), (data.user_name), @([data.time_point timeIntervalSince1970]), @(data.heart_rate), @(0), @(0), @(NO)];
+        if (!success) {
 //            NSLog(@"插入失败");
             *rollback = YES;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -466,6 +500,48 @@ static WHIDatabaseManager *manager = nil;
     [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         for (WHIData *data in pmData) {
             NSString *sql = [NSString stringWithFormat:@"UPDATE PMData SET upload = ? WHERE id = ?"];
+            [db executeUpdate:sql, @(data.upload), @(data.databaseid)];
+        }
+    }];
+}
+
+- (void)queryForUnUploadHeartRateData:(int)limit complete:(void (^)(NSArray * _Nonnull))complete {
+    if (limit == 0) {
+        limit = 10;
+    }
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        NSMutableArray *result = [NSMutableArray array];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM HeartRate where upload = ? or upload is null ORDER BY time_point DESC LIMIT %d", limit];
+        FMResultSet *queryResult = [db executeQuery:sql, @(NO)];
+        //        NSLog(@"query for unupload");
+        while ([queryResult next]) {
+            HeartRateData *data = [[HeartRateData alloc] init];
+            double timePoint = [queryResult doubleForColumn:@"time_point"];
+            data.time_point = [NSDate dateWithTimeIntervalSince1970:timePoint];
+            data.user_id = [queryResult stringForColumn:@"user_id"];
+            data.user_name = [queryResult stringForColumn:@"user_name"];
+            data.heart_rate = [queryResult doubleForColumn:@"heart_rate"];
+            data.longitude = [queryResult doubleForColumn:@"longitude"];
+            data.latitude = [queryResult doubleForColumn:@"latitude"];
+            data.databaseid = [queryResult intForColumn:@"id"];
+            data.upload = [queryResult boolForColumn:@"upload"];
+            
+            [result addObject:data];
+            
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(result);
+        });
+    }];
+}
+
+- (void)updateHeartDataToUpload:(NSArray *)heartData{
+    if (heartData == nil || heartData.count == 0) {
+        return;
+    }
+    [self.databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        for (HeartRateData *data in heartData) {
+            NSString *sql = [NSString stringWithFormat:@"UPDATE HeartRate SET upload = ? WHERE id = ?"];
             [db executeUpdate:sql, @(data.upload), @(data.databaseid)];
         }
     }];
