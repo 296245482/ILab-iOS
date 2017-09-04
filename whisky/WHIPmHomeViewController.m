@@ -188,7 +188,7 @@
 //新增一条记录
 - (void)addOneRecord{
     CLLocation *userLocation = [WHIUserDefaults sharedDefaults].lastLocation;
-    NSString *app_version = @"iOS.2017.06.01";
+    NSString *app_version = @"iOS.2017.09.04";
     NSDate *nowDate = [NSDate date];
     
     if (userLocation && (self.lastDate == nil || [nowDate timeIntervalSinceDate:_lastDate] > queryTimerDutaion)) {

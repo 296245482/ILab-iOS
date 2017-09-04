@@ -25,6 +25,10 @@
 @property (nonatomic, copy)  ScanDevicesCompleteBlock scanBlock;
 @property (nonatomic, copy)  ConnectionDeviceBlock connectionBlock;
 @property (nonatomic, copy)  ServiceAndCharacteristicBlock serviceAndcharBlock;
+
+@property (nonatomic, assign) int HeartRateDataCount;
+@property (nonatomic, assign) double HeartRateData;
+
 @end
 
 @implementation WHIBlueTooth
@@ -71,6 +75,7 @@ static id _instance;
         self.scanBlock(self.DeviceArray);
     }
     self.scanBlock = nil;
+    self.HeartRateDataCount = 0;
 }
 
 - (void)connectionWithDeviceUUID:(NSString *)uuid TimeOut:(NSUInteger)timeout CompleteBlock:(ConnectionDeviceBlock)block {
@@ -179,7 +184,7 @@ static id _instance;
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
-    DDLogDebug(@"发现设备:%@", peripheral);
+//    DDLogDebug(@"发现设备:%@", peripheral);
     [self.DeviceArray addObject:peripheral];
     if (self.scanBlock) {
         self.scanBlock(self.DeviceArray);
@@ -241,7 +246,21 @@ static id _instance;
     }
     [WHIUserDefaults sharedDefaults].heartRate = heartRate;
 //    NSLog(@" 0821 %f", [WHIUserDefaults sharedDefaults].heartRate);
-    [self insertOneHeart:heartRate];
+    [self addOneHeart:heartRate];
+}
+
+-(void)addOneHeart:(double)heart{
+    if(self.HeartRateDataCount < 60){
+        self.HeartRateDataCount ++;
+        self.HeartRateData = self.HeartRateData + heart;
+    }else{
+        self.HeartRateDataCount ++;
+        self.HeartRateData = self.HeartRateData + heart;
+        double heartData = self.HeartRateData / self.HeartRateDataCount;
+        self.HeartRateDataCount = 0;
+        self.HeartRateData = 0;
+        [self insertOneHeart:heartData];
+    }
 }
 
 -(void)insertOneHeart:(double)heart{
