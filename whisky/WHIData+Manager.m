@@ -10,7 +10,6 @@
 #import "WHIUser+Manager.h"
 #import "NSDate+Formatter.h"
 #import "WHIUserDefaults.h"
-#import "HeartRateData.h"
 
 
 @implementation WHIData (Manager)
@@ -120,28 +119,5 @@
     
 }
 
-+ (void)uploadHeart:(NSArray *)result complete:(ArrayCompleteBlock)complete {
-    if (result == nil) {
-        complete(nil, nil);
-        return;
-    }
-    //    NSLog(@"post result is %@",result);
-    for (HeartRateData *data in result) {
-        if (data.upload == NO) {
-            
-            NSDictionary *paras = @{@"user_id": data.user_id ?: @"",
-                                    @"user_name": data.user_name ?: @"",
-                                    @"time_point": [data.time_point whi_dateWithFormat:@"yyyy-MM-dd HH:mm:ss"],
-                                    @"beats": [NSString stringWithFormat:@"%d", (int)data.heart_rate],
-                                    @"longitude": [NSString stringWithFormat:@"%lf", data.longitude],
-                                    @"latitude": [NSString stringWithFormat:@"%lf", data.latitude]};
-//            NSLog(@"0821 paras is %@",paras);
-            [[WHIClient sharedClient] postHeart:@"" parameters:paras complete:^(id successResult, NSError * _Nullable error) {
-                complete(result, error);
-            }];
-        }
-    }
-    
-}
 
 @end

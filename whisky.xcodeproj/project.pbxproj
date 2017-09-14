@@ -60,6 +60,7 @@
 		8C1834111E829BAF008F4B12 /* forecastAirData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1834101E829BAF008F4B12 /* forecastAirData.m */; };
 		8C2A9D5A1F4ABE4E00D43E33 /* HeartRateData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A9D591F4ABE4E00D43E33 /* HeartRateData.m */; };
 		8C75FB1E1F28951D00BCF5B9 /* BlueToothDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C75FB1D1F28951D00BCF5B9 /* BlueToothDataViewController.m */; };
+		8C96AF551F68FD1900151CE3 /* HeartRateDataUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C96AF541F68FD1900151CE3 /* HeartRateDataUpload.m */; };
 		8CA87D381E7EB653000F07BD /* ForecastTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */; };
 		F2DB17F7DEFCC0BA5BD57BFB /* Pods_whisky.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */; };
 		FD1BC7311E2E31E700E2B27C /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1BC7301E2E31E700E2B27C /* DeviceTableViewCell.m */; };
@@ -208,6 +209,8 @@
 		8C2A9D591F4ABE4E00D43E33 /* HeartRateData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeartRateData.m; sourceTree = "<group>"; };
 		8C75FB1C1F28951D00BCF5B9 /* BlueToothDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueToothDataViewController.h; sourceTree = "<group>"; };
 		8C75FB1D1F28951D00BCF5B9 /* BlueToothDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueToothDataViewController.m; sourceTree = "<group>"; };
+		8C96AF531F68FD1900151CE3 /* HeartRateDataUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeartRateDataUpload.h; sourceTree = "<group>"; };
+		8C96AF541F68FD1900151CE3 /* HeartRateDataUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeartRateDataUpload.m; sourceTree = "<group>"; };
 		8CA87D361E7EB653000F07BD /* ForecastTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastTableViewController.h; sourceTree = "<group>"; };
 		8CA87D371E7EB653000F07BD /* ForecastTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastTableViewController.m; sourceTree = "<group>"; };
 		8FF6B1AD41D0056127CD96AE /* Pods_whisky.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whisky.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -308,6 +311,8 @@
 				1800C25A1CED6EBC009018BB /* WHIData.m */,
 				18643E331CFC344100FA86E0 /* WHIData+Manager.h */,
 				18643E341CFC344100FA86E0 /* WHIData+Manager.m */,
+				8C96AF531F68FD1900151CE3 /* HeartRateDataUpload.h */,
+				8C96AF541F68FD1900151CE3 /* HeartRateDataUpload.m */,
 				8C2A9D581F4ABE4E00D43E33 /* HeartRateData.h */,
 				8C2A9D591F4ABE4E00D43E33 /* HeartRateData.m */,
 				18378AAE1CE186070051665C /* PMData */,
@@ -861,7 +866,7 @@
 		};
 		D085E2C4424BF6AF5F013ABD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -915,6 +920,7 @@
 				1800C25B1CED6EBC009018BB /* WHIData.m in Sources */,
 				18B659521CF7044300772326 /* WHILoginProfileTableViewController.m in Sources */,
 				182D56071CE32832002BD78C /* NSDate+Formatter.m in Sources */,
+				8C96AF551F68FD1900151CE3 /* HeartRateDataUpload.m in Sources */,
 				FDA532361E5C31CA00EEABC7 /* customKeyChainTool.m in Sources */,
 				18643E321CFBF4A200FA86E0 /* WHILoginTableViewController.m in Sources */,
 				18A5F16A1CE5CE6000694FDF /* WHIMotionManager.m in Sources */,
