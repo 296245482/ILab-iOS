@@ -58,11 +58,24 @@
     [[WHIDatabaseManager sharedManager] searchLastWeekData:[NSDate date] complete:^(NSArray *result){
         float outdoorVenVol=0.0,indoorVenVol=0.0;
         float indoorTime=0.0, outdoorTime=0.0, lastRecordtime = 0.0;
-        if([result count] < 1000){
+        Boolean enoughData = 0;
+        if([result count] < 720){
+            enoughData = 0;
+        }else{
+            enoughData = 1;
+        }
+        if(!enoughData){
             indoorTime = 3;
             outdoorTime = 21;
             indoorVenVol = 1186.38;
             outdoorVenVol = 8304.66;
+            //ventilation_vol
+            self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", outdoorVenVol];
+            self.insideVol.text = [NSString stringWithFormat:@"%.2f升", indoorVenVol];
+            
+            //in/out door time
+            self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
+            self.insideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*indoorTime/(outdoorTime+indoorTime)];
 //            for (WHIData *data in result){
 //                if(data.outdoor == 1){
 //                    outdoorVenVol += data.ventilation_vol;
@@ -96,15 +109,16 @@
                     lastRecordtime = nowTime;
                 }
             }
+            //ventilation_vol
+            self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*outdoorVenVol/(outdoorTime+indoorTime))];
+            self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*indoorVenVol/(outdoorTime+indoorTime))];
+            
+            //in/out door time
+            self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
+            self.insideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*indoorTime/(outdoorTime+indoorTime)];
         }
         
-        //ventilation_vol
-        self.outsideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*outdoorVenVol/(outdoorTime+indoorTime))];
-        self.insideVol.text = [NSString stringWithFormat:@"%.2f升", (86400*indoorVenVol/(outdoorTime+indoorTime))];
         
-        //in/out door time
-        self.outsideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*outdoorTime/(outdoorTime+indoorTime)];
-        self.insideTime.text = [NSString stringWithFormat:@"%.2f%%", 100*indoorTime/(outdoorTime+indoorTime)];
         
         
         NSString *city = @"";
@@ -121,7 +135,11 @@
             if(result){
                 self.tomorrowWheather.text = [NSString stringWithFormat:@"%@ - %@度",result.LTEMP,result.HTEMP];
                 self.tomorrowAirQuaility.text = [NSString stringWithFormat:@"%@",result.AQI];
-                self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
+                if(!enoughData){
+                    self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * ((outdoorVenVol+(indoorVenVol/2))/1000)];
+                }else{
+                    self.forecastIntake.text = [NSString stringWithFormat:@"%.2f微克", [result.PM25 doubleValue] * (86.4*(outdoorVenVol+(indoorVenVol/2))/(outdoorTime+indoorTime))];
+                }
                 self.tomorrowPM.text = [NSString stringWithFormat:@"%@微克/m³",result.PM25];
                 NSString *dateTime = [result.Date substringFromIndex:([result.Date length]-5)];
                 self.weatherLabel.text = [NSString stringWithFormat:@"%@日温度", dateTime];
